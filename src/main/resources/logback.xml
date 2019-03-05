@@ -2,9 +2,8 @@
 <configuration>
     <appender name = "STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%-5level] %logger{50} - %message%n</pattern>
+            <pattern>%d{HH:mm:ss} [%-5level] %logger{40} - %message%n</pattern>
         </encoder>
-
     </appender>
 
     <logger name="com.endava.practice.roadmap" level="DEBUG"/>
