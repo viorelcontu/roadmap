@@ -13,15 +13,15 @@ public interface ResourceOperations<T extends IdEntity<U>, U> {
     String DELETE = "Deleting a resource {}";
     String COUNT = "Counting resources";
 
-    T findOne(U id);
+    T findOne(final U id);
 
     List<T> findAll();
 
-    T create(T resource);
+    T create(final T resource);
 
-    void update(U id, T resource);
+    void update(final U id, final T resource);
 
-    void delete(U id);
+    void delete(final U id);
 
     long count();
 }
