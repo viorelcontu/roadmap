@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.endava.practice.roadmap.TestUtils.USER2_ID;
-import static com.endava.practice.roadmap.TestUtils.USER2_NAME;
-import static com.endava.practice.roadmap.TestUtils.USER_ID;
-import static com.endava.practice.roadmap.TestUtils.USER_NAME;
+import static com.endava.practice.roadmap.util.TestUtils.USER2_ID;
+import static com.endava.practice.roadmap.util.TestUtils.USER2_NAME;
+import static com.endava.practice.roadmap.util.TestUtils.USER_ID;
+import static com.endava.practice.roadmap.util.TestUtils.USER_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;

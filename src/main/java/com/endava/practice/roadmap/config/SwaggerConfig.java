@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.configuration;
+package com.endava.practice.roadmap.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

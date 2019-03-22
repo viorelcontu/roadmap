@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
-	"com.endava.practice.roadmap.configuration",
+	"com.endava.practice.roadmap.config",
 	"com.endava.practice.roadmap.persistence",
 	"com.endava.practice.roadmap.service",
 	"com.endava.practice.roadmap.web.controller"

@@ -1,15 +1,15 @@
 package com.endava.practice.roadmap.web.controller;
 
 import com.endava.practice.roadmap.persistence.entity.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.endava.practice.roadmap.TestUtils.USER2_ID;
-import static com.endava.practice.roadmap.TestUtils.USER2_NAME;
-import static com.endava.practice.roadmap.TestUtils.USER_ID;
-import static com.endava.practice.roadmap.TestUtils.USER_NAME;
+import static com.endava.practice.roadmap.util.TestUtils.USER2_ID;
+import static com.endava.practice.roadmap.util.TestUtils.USER2_NAME;
+import static com.endava.practice.roadmap.util.TestUtils.USER_ID;
+import static com.endava.practice.roadmap.util.TestUtils.USER_NAME;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;
@@ -25,9 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class UserControllerTest extends BaseControllerTest {
 
-    private User user;
+    @Autowired
+    private ObjectWriter objectWriter;
 
-    private final ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+    private User user;
 
     @BeforeEach
     void setUp() {

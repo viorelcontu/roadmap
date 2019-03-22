@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.configuration;
+package com.endava.practice.roadmap.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;

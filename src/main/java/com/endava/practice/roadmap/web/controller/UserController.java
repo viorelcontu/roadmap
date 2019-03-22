@@ -2,9 +2,11 @@ package com.endava.practice.roadmap.web.controller;
 
 import com.endava.practice.roadmap.persistence.entity.User;
 import com.endava.practice.roadmap.service.UserService;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

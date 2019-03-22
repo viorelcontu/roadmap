@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap;
+package com.endava.practice.roadmap.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
