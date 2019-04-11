@@ -1,8 +1,8 @@
-package com.endava.practice.roadmap.web.controller;
+package com.endava.practice.roadmap.web;
 
-import com.endava.practice.roadmap.web.dto.ApiErrorDto;
-import com.endava.practice.roadmap.web.exception.BadRequestException;
-import com.endava.practice.roadmap.web.exception.ResourceNotFoundException;
+import com.endava.practice.roadmap.domain.model.dto.ApiErrorDto;
+import com.endava.practice.roadmap.domain.exception.BadRequestException;
+import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler (value = ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFound(final ResourceNotFoundException ex, final WebRequest request) {

@@ -10,7 +10,7 @@ Host: localhost:8080
 Accept: application/json
 ###
 
-GET /users/2
+GET /users/3
 Host: localhost:8080
 Accept: application/json
 ###
@@ -22,7 +22,7 @@ Accept: application/json
 
 {
   "id": 3,
-  "name": "The Second User"
+  "name": "Altetnative User"
 }
 ###
 
@@ -32,7 +32,13 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id" : 30,
-  "name" : "N"
+  "id" : 100,
+  "name" : "Samantha Brown"
 }
+###
+DELETE /users/3
+Host:localhost:8080
+Content-Type: application/json
+Accept: application/json
+
 ###

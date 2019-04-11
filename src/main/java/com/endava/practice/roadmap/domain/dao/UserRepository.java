@@ -1,6 +1,6 @@
-package com.endava.practice.roadmap.persistence.dao;
+package com.endava.practice.roadmap.domain.dao;
 
-import com.endava.practice.roadmap.persistence.entity.User;
+import com.endava.practice.roadmap.domain.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

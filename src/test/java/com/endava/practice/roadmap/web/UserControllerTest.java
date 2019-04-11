@@ -1,6 +1,7 @@
-package com.endava.practice.roadmap.web.controller;
+package com.endava.practice.roadmap.web;
 
-import com.endava.practice.roadmap.persistence.entity.User;
+import com.endava.practice.roadmap.domain.model.dto.UserDto;
+import com.endava.practice.roadmap.domain.model.entity.User;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,11 +29,11 @@ public class UserControllerTest extends BaseControllerTest {
     @Autowired
     private ObjectWriter objectWriter;
 
-    private User user;
+    private UserDto user;
 
     @BeforeEach
     void setUp() {
-        user = new User(USER_ID, USER_NAME);
+        user = new UserDto(USER_ID, USER_NAME);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     void shouldReturnAllUsers() throws Exception {
-        User anotherUser = new User(USER2_ID, USER2_NAME);
+        UserDto anotherUser = new UserDto(USER2_ID, USER2_NAME);
 
         when(userServiceMock.findAll()).thenReturn(asList(user, anotherUser));
 

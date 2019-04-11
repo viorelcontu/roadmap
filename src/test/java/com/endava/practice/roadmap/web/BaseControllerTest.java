@@ -1,7 +1,7 @@
-package com.endava.practice.roadmap.web.controller;
+package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.config.TestConfig;
-import com.endava.practice.roadmap.service.UserService;
+import com.endava.practice.roadmap.domain.service.AbstractCrudService;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,7 +28,7 @@ abstract public class BaseControllerTest {
         );
 
     @MockBean
-    UserService userServiceMock;
+    AbstractCrudService userServiceMock;
 
     @AfterEach
     void verifyMockedResources () {

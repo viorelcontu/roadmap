@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.web.dto;
+package com.endava.practice.roadmap.domain.model.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

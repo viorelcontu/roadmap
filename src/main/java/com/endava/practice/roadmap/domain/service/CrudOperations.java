@@ -1,10 +1,10 @@
-package com.endava.practice.roadmap.service;
+package com.endava.practice.roadmap.domain.service;
 
-import com.endava.practice.roadmap.persistence.entity.IdEntity;
+import com.endava.practice.roadmap.domain.model.entity.ResourceWithId;
 
 import java.util.List;
 
-public interface ResourceOperations<T extends IdEntity<U>, U> {
+public interface CrudOperations<D extends ResourceWithId<U>, U> {
 
     String FIND_ONE = "Retrieving a resource {}";
     String FIND_ALL = "Retrieving all resources";
@@ -13,13 +13,13 @@ public interface ResourceOperations<T extends IdEntity<U>, U> {
     String DELETE = "Deleting a resource {}";
     String COUNT = "Counting resources";
 
-    T findOne(final U id);
+    D findOne(final U id);
 
-    List<T> findAll();
+    List<D> findAll();
 
-    T create(final T resource);
+    D create(final D resource);
 
-    void update(final U id, final T resource);
+    void update(final U id, final D resource);
 
     void delete(final U id);
 

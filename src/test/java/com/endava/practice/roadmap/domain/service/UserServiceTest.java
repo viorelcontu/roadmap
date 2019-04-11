@@ -1,9 +1,11 @@
-package com.endava.practice.roadmap.service;
+package com.endava.practice.roadmap.domain.service;
 
-import com.endava.practice.roadmap.persistence.dao.UserRepository;
-import com.endava.practice.roadmap.persistence.entity.User;
-import com.endava.practice.roadmap.web.exception.BadRequestException;
-import com.endava.practice.roadmap.web.exception.ResourceNotFoundException;
+import com.endava.practice.roadmap.domain.dao.UserRepository;
+import com.endava.practice.roadmap.domain.exception.BadRequestException;
+import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
+import com.endava.practice.roadmap.domain.model.dto.UserDto;
+import com.endava.practice.roadmap.domain.model.entity.User;
+import com.endava.practice.roadmap.domain.model.mapper.UserMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,15 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.endava.practice.roadmap.util.TestUtils.USER2_ID;
-import static com.endava.practice.roadmap.util.TestUtils.USER2_NAME;
-import static com.endava.practice.roadmap.util.TestUtils.USER_ID;
-import static com.endava.practice.roadmap.util.TestUtils.USER_NAME;
+import static com.endava.practice.roadmap.util.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -32,14 +30,19 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepositoryMock;
 
+    @Mock
+    UserMapper mapperMock;
+
     @InjectMocks
     private UserService userService;
 
-    private User user;
+    private User userEntity;
+    private UserDto userDto;
 
     @BeforeEach
     void setUp() {
-        user = new User(USER_ID, USER_NAME);
+        userEntity = new User(USER_ID, USER_NAME);
+        userDto = new UserDto(USER_ID, USER_NAME);
     }
 
     @AfterEach
@@ -49,9 +52,14 @@ class UserServiceTest {
 
     @Test
     void findOne() {
-        when(userRepositoryMock.findById(USER_ID)).thenReturn(Optional.ofNullable(user));
-        assertThat(userService.findOne(USER_ID)).isEqualTo(user);
+        when(userRepositoryMock.findById(USER_ID)).thenReturn(Optional.ofNullable(userEntity));
+        when(mapperMock.toDto(userEntity)).thenReturn(userDto);
+
+        assertThat(userService.findOne(USER_ID)).isEqualTo(userDto);
+
         verify(userRepositoryMock).findById(USER_ID);
+        verify(mapperMock).toDto(userEntity);
+
     }
 
     @Test
@@ -63,43 +71,56 @@ class UserServiceTest {
 
     @Test
     void findAll() {
-        final User anotherUser = new User (USER2_ID, USER2_NAME);
-        List<User> userList = Arrays.asList(user, anotherUser);
-        when(userRepositoryMock.findAll()).thenReturn(userList);
+        final User userEntity2 = new User(USER2_ID, USER2_NAME);
+        final UserDto userDto2 = new UserDto(USER2_ID, USER2_NAME);
 
-        assertThat(userService.findAll()).containsOnly(user, anotherUser);
+        List<User> userEntityList = Arrays.asList(userEntity, userEntity2);
+        when(userRepositoryMock.findAll()).thenReturn(userEntityList);
+        when(mapperMock.toDto(any(User.class))).thenReturn(userDto, userDto2);
+
+        assertThat(userService.findAll()).containsOnly(userDto, userDto2);
 
         verify(userRepositoryMock).findAll();
+        verify(mapperMock, times(2)).toDto(any(User.class));
     }
 
     @Test
     void create() {
-        when (userRepositoryMock.save(user)).thenReturn(user);
-        assertThat(userService.create(user)).isEqualTo(user);
-        verify(userRepositoryMock).save(user);
+        when (userRepositoryMock.save(userEntity)).thenReturn(userEntity);
+        lenient().when (mapperMock.toEntity(userDto)).thenReturn(userEntity);
+        lenient().when (mapperMock.toDto(userEntity)).thenReturn(userDto);
+
+        assertThat(userService.create(userDto)).isEqualTo(userDto);
+
+        verify(userRepositoryMock).save(userEntity);
+        verify (mapperMock).toEntity(userDto);
+        verify (mapperMock).toDto(userEntity);
+
     }
 
     @Test
     void update() {
-        when (userRepositoryMock.save(user)).thenReturn(user);
+        when (userRepositoryMock.save(userEntity)).thenReturn(userEntity);
         when (userRepositoryMock.existsById(USER_ID)).thenReturn(true);
+        when (mapperMock.toEntity(userDto)).thenReturn(userEntity);
 
-        userService.update(USER_ID,user);
+        userService.update(USER_ID, userDto);
 
-        verify(userRepositoryMock).save(user);
+        verify(userRepositoryMock).save(userEntity);
         verify(userRepositoryMock).existsById(USER_ID);
+        verify(mapperMock).toEntity(userDto);
     }
 
     @Test
     void updateNonExistingShouldThrowResourceNotFound() {
         when (userRepositoryMock.existsById(USER_ID)).thenReturn(false);
-        assertThatThrownBy(() -> userService.update(USER_ID,user)).isInstanceOf(ResourceNotFoundException.class);
+        assertThatThrownBy(() -> userService.update(USER_ID, userDto)).isInstanceOf(ResourceNotFoundException.class);
         verify(userRepositoryMock).existsById(USER_ID);
     }
 
     @Test
     void updateMismatchedIdsShouldThrowBadRequest() {
-        assertThatThrownBy(() -> userService.update(USER2_ID, user)).isInstanceOf(BadRequestException.class);
+        assertThatThrownBy(() -> userService.update(USER2_ID, userDto)).isInstanceOf(BadRequestException.class);
     }
 
     @Test

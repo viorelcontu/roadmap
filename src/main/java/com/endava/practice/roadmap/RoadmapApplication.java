@@ -5,9 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
 	"com.endava.practice.roadmap.config",
-	"com.endava.practice.roadmap.persistence",
-	"com.endava.practice.roadmap.service",
-	"com.endava.practice.roadmap.web.controller"
+    "com.endava.practice.roadmap.domain.service",
+	"com.endava.practice.roadmap.domain.dao",
+	"com.endava.practice.roadmap.domain.model.mapper",
+	"com.endava.practice.roadmap.web"
 })
 public class RoadmapApplication {
 

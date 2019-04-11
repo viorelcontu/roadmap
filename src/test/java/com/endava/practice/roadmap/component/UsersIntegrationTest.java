@@ -1,14 +1,19 @@
 package com.endava.practice.roadmap.component;
 
-import com.endava.practice.roadmap.persistence.dao.UserRepository;
-import com.endava.practice.roadmap.persistence.entity.User;
+import com.endava.practice.roadmap.domain.dao.UserRepository;
+import com.endava.practice.roadmap.domain.model.entity.User;
 import com.endava.practice.roadmap.util.JsonResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
+import javax.transaction.Transactional;
 
 import static com.endava.practice.roadmap.util.JsonResource.JSON_USER_NEW;
 import static com.endava.practice.roadmap.util.JsonResource.JSON_USER_NOT_FOUND;
@@ -23,35 +28,43 @@ import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.util.UriComponentsBuilder.fromUri;
+import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
-//TODO find an alternative for HttpStatus.CODE.value()
-public class UsersIntegrationTest extends BaseTest {
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@Transactional
+public class UsersIntegrationTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    public static final String USERS_PATH = "/users";
+    final private UserRepository userRepository;
+    final private URI usersPath;
+    final private UriComponentsBuilder usersIdPath;
+
+    public UsersIntegrationTest(@Autowired UserRepository userRepository, @LocalServerPort int port) {
+        this.userRepository = userRepository;
+        usersPath = fromUriString("http://localhost").port(port).path(USERS_PATH).build().toUri();
+        usersIdPath = fromUri(usersPath).path("/{id}");
+    }
 
     @Test
     public void getAllUsersReturnsOK() {
-        final String uri = getUsersURL();
-
         given()
             .accept(JSON)
         .expect()
             .statusCode(OK.value())
         .when()
-            .get(uri);
+            .get(usersPath);
     }
 
     @Test
     public void getOneUserReturnsOK() {
-        final String uri = getUsersURL() + USER_ID;
-
         given()
             .accept(JSON)
         .expect()
@@ -60,25 +73,22 @@ public class UsersIntegrationTest extends BaseTest {
                 "id", comparesEqualTo(USER_ID.intValue()),
                 "name", equalTo(USER_NAME))
         .when()
-            .get(uri);
+            .get(usersIdPath.build(USER_ID));
     }
 
     @Test
     public void getNonExistingReturnsNotFound404 () {
-        final String uri = getUsersURL() + USER_ID_NON_EXISTING;
-
         given()
             .accept(JSON)
         .expect()
             .statusCode(NOT_FOUND.value())
         .when()
-            .get(uri);
+            .get(usersIdPath.build(USER_ID_NON_EXISTING));
     }
 
     @Test
     public void postNewUserSuccessful201() {
-        final String uri = getUsersURL();
-
+        final Long newUserId = 45L;
         given()
             .contentType(JSON)
             .accept(JSON)
@@ -86,19 +96,18 @@ public class UsersIntegrationTest extends BaseTest {
             .body(JSON_USER_NEW.getFile())
         .expect()
             .statusCode(CREATED.value())
-            .body("id", equalTo(1),
+            .body("id", equalTo(newUserId.intValue()),
                 "name", equalTo("Arnold"))
         .when()
-            .post(uri);
+            .post(usersPath);
 
-        assertThat(userRepository.existsById(1L)).isTrue();
+        assertThat(userRepository.existsById(newUserId)).isTrue();
     }
 
     @ParameterizedTest
     @EnumSource(value = JsonResource.class, names = {"JSON_USER_MALFORMED", "JSON_USER_MISSING_NAME", "JSON_USER_NULL_NAME"})
     public void postUserJsonReturns400BadRequest(JsonResource jsonResource) {
 
-        final String uri = getUsersURL();
         given()
             .contentType(JSON)
             .accept(JSON)
@@ -107,13 +116,11 @@ public class UsersIntegrationTest extends BaseTest {
             .statusCode(BAD_REQUEST.value())
             .body("status", equalTo("400 BAD_REQUEST"))
         .when()
-            .post(uri);
+            .post(usersPath);
     }
 
     @Test
     public void putUserReturnsAccepted202 () {
-        final String uri = getUsersURL() + USER_ID;
-
         given()
             .contentType(JSON)
             .accept(JSON)
@@ -121,7 +128,7 @@ public class UsersIntegrationTest extends BaseTest {
         .expect()
             .statusCode(ACCEPTED.value())
         .when()
-            .put(uri);
+            .put(usersIdPath.build(USER_ID));
 
         Optional<User> userOptional = userRepository.findById(USER_ID);
         assertThat(userOptional).contains(new User(42L, "Unknown President"));
@@ -129,8 +136,6 @@ public class UsersIntegrationTest extends BaseTest {
 
     @Test
     public void putMissingUserReturnsNotFound404 () {
-        final String uri = getUsersURL() + USER_ID_NON_EXISTING;
-
         given()
             .contentType(JSON)
             .accept(JSON)
@@ -138,13 +143,11 @@ public class UsersIntegrationTest extends BaseTest {
         .expect()
             .statusCode(NOT_FOUND.value())
         .when()
-            .put(uri);
+            .put(usersIdPath.build(USER_ID_NON_EXISTING));
     }
 
     @Test
     public void putUserWithMismatchedIdsReturnsBadRequest400 () {
-            final String uri = getUsersURL() + USER2_ID;
-
         given()
             .contentType(JSON)
             .accept(JSON)
@@ -152,40 +155,34 @@ public class UsersIntegrationTest extends BaseTest {
         .expect()
             .statusCode(BAD_REQUEST.value())
         .when()
-            .put(uri);
+            .put(usersIdPath.build(USER2_ID));
     }
 
     @Test
     public void deleteUserReturnsNoContent204 () {
-        final String uri = getUsersURL() + USER_ID;
-
         expect()
             .statusCode(NO_CONTENT.value())
         .when()
-            .delete(uri);
+            .delete(usersIdPath.build(USER_ID));
 
         assertThat(userRepository.existsById(USER_ID)).isFalse();
     }
 
     @Test
     public void deleteNonExistingUserReturnsNotFound404 () {
-        final String uri = getUsersURL() + USER_ID_NON_EXISTING;
-
         expect()
             .statusCode(NOT_FOUND.value())
         .when()
-            .delete(uri);
+            .delete(usersIdPath.build(USER_ID_NON_EXISTING));
     }
 
     @Test
     public void countReturnsEntityCountFromDB() {
-        final String uri = getUsersURL() + "count";
         final long actualUserCount = userRepository.count();
 
         expect()
             .body(equalTo(String.valueOf(actualUserCount)))
         .when()
-            .get(uri);
+            .get(fromUri(usersPath).path("/count").toUriString());
     }
-
 }

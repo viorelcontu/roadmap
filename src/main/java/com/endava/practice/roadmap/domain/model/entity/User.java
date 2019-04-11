@@ -1,6 +1,5 @@
-package com.endava.practice.roadmap.persistence.entity;
+package com.endava.practice.roadmap.domain.model.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,15 +17,13 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements IdEntity<Long> {
+public class User implements ResourceWithId<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @ApiModelProperty ("User unique id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    @ApiModelProperty ("User name")
     @NotNull
-    String name;
+    private String name;
 }

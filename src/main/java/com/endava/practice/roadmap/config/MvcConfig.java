@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Configuration
-public class JacksonConfig implements WebMvcConfigurer {
+public class MvcConfig implements WebMvcConfigurer {
 
     public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
         final Optional<HttpMessageConverter<?>> converterFound = converters.stream()
@@ -23,5 +23,5 @@ public class JacksonConfig implements WebMvcConfigurer {
             converter.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
             converter.getObjectMapper().enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         }
-    }    
+    }
 }

@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.web.exception;
+package com.endava.practice.roadmap.domain.exception;
 
 public class BadRequestException extends RuntimeException {
 
