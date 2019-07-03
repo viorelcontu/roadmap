@@ -1,0 +1,11 @@
+GET /map/cryptocurrency
+Host: localhost:8080
+Accept: application/json
+
+###
+
+GET /map/fiatcurrency
+Host: localhost:8080
+Accept: application/json
+
+###

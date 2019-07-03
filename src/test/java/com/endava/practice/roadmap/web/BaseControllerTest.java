@@ -2,6 +2,8 @@ package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.config.TestConfig;
 import com.endava.practice.roadmap.domain.service.AbstractCrudService;
+import com.endava.practice.roadmap.domain.service.CurrencyService;
+import com.endava.practice.roadmap.domain.service.MarketService;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,9 +32,14 @@ abstract public class BaseControllerTest {
     @MockBean
     AbstractCrudService userServiceMock;
 
+    @MockBean
+    CurrencyService currencyService;
+
+    @MockBean
+    MarketService marketService;
+
     @AfterEach
     void verifyMockedResources () {
-        verifyNoMoreInteractions(userServiceMock);
+        verifyNoMoreInteractions(userServiceMock, currencyService);
     }
-
 }

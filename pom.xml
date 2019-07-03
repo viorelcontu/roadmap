@@ -11,7 +11,7 @@
 
     <groupId>com.endava.practice</groupId>
     <artifactId>roadmap</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>roadmap</name>
     <description>Java Road Map Practice</description>
 
@@ -152,6 +152,11 @@
                             <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <compilerArg>
+                            -Amapstruct.defaultComponentModel=spring
+                        </compilerArg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

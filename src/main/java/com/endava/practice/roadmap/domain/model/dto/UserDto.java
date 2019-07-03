@@ -13,10 +13,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class UserDto implements ResourceWithId<Long> {
 
-    @ApiModelProperty ("User unique id")
+    //TODO Tokens for users
+
     private Long id;
 
-    @ApiModelProperty ("User name")
     @NotNull
     private String name;
 }

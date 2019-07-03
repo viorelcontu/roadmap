@@ -1,0 +1,17 @@
+GET /quotes/BTC
+Host: localhost:8080
+Accept: application/json
+
+###
+
+GET /quotes/XMR
+Host: localhost:8080
+Accept: application/json
+
+###
+
+GET /quotes?id=10
+Host: localhost:8080
+Accept: application/json
+
+###

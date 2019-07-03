@@ -19,6 +19,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class User implements ResourceWithId<Long> {
 
+    //TODO add tokens for users
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

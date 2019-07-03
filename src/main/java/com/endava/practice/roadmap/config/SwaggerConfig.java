@@ -27,7 +27,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo metaData() {
-        Contact contact = new Contact("Viorel Contu","www.endava.com", "viorel.contu@endava.com");
+        Contact contact = new Contact("Viorel Contu","www.endava.com", null);
 
         return new ApiInfo(
             "Roadmap Practice Application API",

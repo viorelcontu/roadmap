@@ -7,5 +7,10 @@ public class BadRequestException extends RuntimeException {
         return new BadRequestException(errorMsg);
     }
 
+    public static BadRequestException ofWrongCrypto (Object currencyId) {
+        String errorMsg = String.format("Cryptocurrency with identifier: %s does not exist", currencyId);
+        return new BadRequestException(errorMsg);
+    }
+
     private BadRequestException(final String message) { super(message); }
 }

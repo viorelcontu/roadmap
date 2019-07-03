@@ -5,7 +5,7 @@ import com.endava.practice.roadmap.domain.exception.BadRequestException;
 import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
 import com.endava.practice.roadmap.domain.model.dto.UserDto;
 import com.endava.practice.roadmap.domain.model.entity.User;
-import com.endava.practice.roadmap.domain.model.mapper.UserMapper;
+import com.endava.practice.roadmap.domain.mapper.UserMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

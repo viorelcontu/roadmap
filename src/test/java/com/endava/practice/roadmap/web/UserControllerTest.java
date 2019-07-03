@@ -1,28 +1,19 @@
 package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.domain.model.dto.UserDto;
-import com.endava.practice.roadmap.domain.model.entity.User;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.endava.practice.roadmap.util.TestUtils.USER2_ID;
-import static com.endava.practice.roadmap.util.TestUtils.USER2_NAME;
-import static com.endava.practice.roadmap.util.TestUtils.USER_ID;
-import static com.endava.practice.roadmap.util.TestUtils.USER_NAME;
+import static com.endava.practice.roadmap.util.TestUtils.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerTest {
 
