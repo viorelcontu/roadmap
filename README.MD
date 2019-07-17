@@ -154,7 +154,7 @@ For testing purposes, a different sql file is loaded, located in
 
 <a name="future"><a>
 ## 6. Future Plans
-- [ ] Add exception handler for RestTemplate
+- [X] Add exception handler for RestTemplate
 - [ ] Add wiremock to enable integration tests for **/quotes** endpoints
 - [ ] Adjust API endpoints to require authentication tokens active for users
 - [ ] Generate custom API schema for Swagger
