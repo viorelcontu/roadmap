@@ -1,6 +1,6 @@
 package com.endava.practice.roadmap.domain.service;
 
-import com.endava.practice.roadmap.domain.model.entity.ResourceWithId;
+import com.endava.practice.roadmap.domain.model.entities.ResourceWithId;
 
 import java.util.List;
 

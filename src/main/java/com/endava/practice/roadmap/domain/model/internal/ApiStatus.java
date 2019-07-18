@@ -1,11 +1,11 @@
-package com.endava.practice.roadmap.domain.model.dto;
+package com.endava.practice.roadmap.domain.model.internal;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class ApiErrorDto {
+public class ApiStatus {
 
     final private String status;
     final private String message;

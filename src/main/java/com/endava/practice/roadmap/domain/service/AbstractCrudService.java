@@ -2,9 +2,10 @@ package com.endava.practice.roadmap.domain.service;
 
 import com.endava.practice.roadmap.domain.exception.BadRequestException;
 import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
-import com.endava.practice.roadmap.domain.model.entity.ResourceWithId;
+import com.endava.practice.roadmap.domain.model.entities.ResourceWithId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.function.Function;
@@ -38,7 +39,10 @@ public abstract class AbstractCrudService<D extends ResourceWithId<U>, E extends
     }
 
     @Override
+    @Transactional
     public void update(final U id, final D resource) {
+        //FIXME in one transation checkExistence and dao.save!
+
         if (!resource.getId().equals(id))
             throw BadRequestException.ofMismatchedPath(id, resource.getId());
 

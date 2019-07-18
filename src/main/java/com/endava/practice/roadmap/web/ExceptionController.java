@@ -3,7 +3,7 @@ package com.endava.practice.roadmap.web;
 import com.endava.practice.roadmap.domain.exception.BadRequestException;
 import com.endava.practice.roadmap.domain.exception.LocalInternalServerError;
 import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
-import com.endava.practice.roadmap.domain.model.dto.ApiErrorDto;
+import com.endava.practice.roadmap.domain.model.internal.ApiStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
@@ -53,9 +53,9 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, apiMessage(BAD_REQUEST, ex), headers, BAD_REQUEST, request);
     }
 
-    private ApiErrorDto apiMessage(final HttpStatus httpStatus, final Exception ex) {
+    private ApiStatus apiMessage(final HttpStatus httpStatus, final Exception ex) {
         final String message = ex.getMessage() == null ? ex.getClass().getSimpleName() : ex.getMessage();
         final String devMessage = ExceptionUtils.getRootCauseMessage(ex);
-        return new ApiErrorDto(httpStatus.toString(), message, devMessage);
+        return new ApiStatus(httpStatus.toString(), message, devMessage);
     }
 }

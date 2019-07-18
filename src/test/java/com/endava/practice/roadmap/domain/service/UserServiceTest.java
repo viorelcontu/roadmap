@@ -3,9 +3,9 @@ package com.endava.practice.roadmap.domain.service;
 import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.exception.BadRequestException;
 import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
-import com.endava.practice.roadmap.domain.model.dto.UserDto;
-import com.endava.practice.roadmap.domain.model.entity.User;
 import com.endava.practice.roadmap.domain.mapper.UserMapper;
+import com.endava.practice.roadmap.domain.model.entities.User;
+import com.endava.practice.roadmap.domain.model.internal.UserDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,11 +18,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.endava.practice.roadmap.util.TestUtils.*;
+import static com.endava.practice.roadmap.util.TestUtils.USER2_ID;
+import static com.endava.practice.roadmap.util.TestUtils.USER2_NAME;
+import static com.endava.practice.roadmap.util.TestUtils.USER_ID;
+import static com.endava.practice.roadmap.util.TestUtils.USER_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {

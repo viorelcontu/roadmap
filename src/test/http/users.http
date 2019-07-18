@@ -10,7 +10,7 @@ Host: localhost:8080
 Accept: application/json
 ###
 
-GET /users/3
+GET /users/5
 Host: localhost:8080
 Accept: application/json
 ###

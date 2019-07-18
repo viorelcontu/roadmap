@@ -1,5 +1,5 @@
 
-package com.endava.practice.roadmap.domain.model.coinmarket;
+package com.endava.practice.roadmap.domain.model.external.responses.quotes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
-public class MarketQuote {
+public class ExternalQuotesDataPrice {
 
     private Double price;
 

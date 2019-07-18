@@ -1,7 +1,7 @@
 package com.endava.practice.roadmap.component;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
-import com.endava.practice.roadmap.domain.model.entity.User;
+import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.util.JsonResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -174,15 +174,5 @@ public class UsersIntegrationTest {
             .statusCode(NOT_FOUND.value())
         .when()
             .delete(usersIdPath.build(USER_ID_NON_EXISTING));
-    }
-
-    @Test
-    public void countReturnsEntityCountFromDB() {
-        final long actualUserCount = userRepository.count();
-
-        expect()
-            .body(equalTo(String.valueOf(actualUserCount)))
-        .when()
-            .get(fromUri(usersPath).path("/count").toUriString());
     }
 }

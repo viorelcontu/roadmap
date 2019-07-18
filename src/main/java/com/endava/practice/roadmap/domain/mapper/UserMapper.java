@@ -1,7 +1,7 @@
 package com.endava.practice.roadmap.domain.mapper;
 
-import com.endava.practice.roadmap.domain.model.dto.UserDto;
-import com.endava.practice.roadmap.domain.model.entity.User;
+import com.endava.practice.roadmap.domain.model.entities.User;
+import com.endava.practice.roadmap.domain.model.internal.UserDto;
 import org.mapstruct.Mapper;
 
 @Mapper

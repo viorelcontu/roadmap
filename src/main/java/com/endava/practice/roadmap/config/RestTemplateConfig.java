@@ -12,19 +12,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collections;
 
 import static com.endava.practice.roadmap.domain.exception.LocalInternalServerError.ofUnspecified;
 import static com.endava.practice.roadmap.domain.exception.LocalInternalServerError.ofWrongMarketToken;
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpRequest;
 
 @Configuration
+@Profile({"dev", "prod"})
 public class RestTemplateConfig {
 
     private static final String TOKEN_HEADER_NAME = "X-CMC_PRO_API_KEY";
@@ -35,11 +34,11 @@ public class RestTemplateConfig {
     @Value("${crypto.portal.host}")
     private String host;
 
-    @Profile({"dev", "prod"})
     @Bean
     public RestTemplate coinMarketRestClient (RestTemplateBuilder builder) {
         return builder
                 .additionalInterceptors(new HeaderApiTokenInterceptor())
+                .uriTemplateHandler(new DefaultUriBuilderFactory(host))
                 .errorHandler(new ErrorResponseHandler())
                 .build();
     }
@@ -73,22 +72,7 @@ public class RestTemplateConfig {
             headers.put(TOKEN_HEADER_NAME, Collections.singletonList(token));
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            return execution.execute(new InsertHostToRequestWrapper(request), body);
-        }
-    }
-
-    private class InsertHostToRequestWrapper extends HttpRequestWrapper {
-
-        private final HttpRequest request;
-
-        public InsertHostToRequestWrapper(HttpRequest request) {
-            super(request);
-            this.request=request;
-        }
-
-        @Override
-        public URI getURI() {
-            return fromHttpRequest(request).host(host).build().toUri();
+            return execution.execute(request, body);
         }
     }
 }

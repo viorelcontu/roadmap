@@ -1,8 +1,8 @@
 package com.endava.practice.roadmap.domain.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,7 +12,8 @@ import static com.endava.practice.roadmap.domain.model.enums.Currency.Type.FIAT;
 @RequiredArgsConstructor
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@JsonIgnoreProperties({"externalId", "code", "type"})
+@JsonPropertyOrder ({"code", "id", "name"})
+@JsonIgnoreProperties({"externalId", "slug", "type", "crypto", "fiat"})
 public enum Currency {
 
     BTC(1, 1, CRYPTO, "Bitcoin", "bitcoin"),
@@ -63,12 +64,12 @@ public enum Currency {
 
     private final String name;
 
-    private final String code; //not used for now
+    private final String slug; //not used for now
 
-    @JsonIgnore
+    public String getCode() { return this.name(); }
+
     public boolean isCrypto() { return type == CRYPTO;}
 
-    @JsonIgnore
     public boolean isFiat() { return type == FIAT;}
 
     public enum Type {

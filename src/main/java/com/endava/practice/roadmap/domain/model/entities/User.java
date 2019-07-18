@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.model.entity;
+package com.endava.practice.roadmap.domain.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

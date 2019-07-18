@@ -1,50 +1,58 @@
 package com.endava.practice.roadmap.domain.mapper;
 
-import com.endava.practice.roadmap.domain.model.coinmarket.MarketQuote;
-import com.endava.practice.roadmap.domain.model.coinmarket.MarketQuotesData;
-import com.endava.practice.roadmap.domain.model.coinmarket.MarketQuotesResponse;
-import com.endava.practice.roadmap.domain.model.quotes.LocalQuote;
-import com.endava.practice.roadmap.domain.model.quotes.LocalQuotesData;
-import com.endava.practice.roadmap.domain.model.quotes.LocalQuotesResponse;
+import com.endava.practice.roadmap.domain.model.enums.Currency;
+import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesData;
+import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesDataPrice;
+import com.endava.practice.roadmap.domain.model.internal.responses.quotes.QuotesPrice;
+import com.endava.practice.roadmap.domain.model.internal.responses.quotes.QuotesResponse;
 import com.endava.practice.roadmap.domain.service.CurrencyService;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.function.Function.identity;
-
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.ERROR)
 public abstract class QuotesMapper {
 
     @Autowired
     protected CurrencyService currencyService;
 
-    public abstract LocalQuotesResponse convertToLocalQuotesResponse(MarketQuotesResponse marketQuotesResponse);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "code", ignore = true)
+    protected abstract QuotesPrice mapQuotesPrice(@Context String code,
+                                                  ExternalQuotesDataPrice externalQuotesPrice);
 
-    @Mapping(target = "id", expression = "java( currencyService.fromExternalId(marketQuotesData.getExternalId()).getId() )")
-    @Mapping(source = "cmcRank", target = "worldRank")
-    public abstract LocalQuotesData convertMarketQuotesData(MarketQuotesData marketQuotesData);
+    @AfterMapping
+    protected void postMapping(@Context String code, @MappingTarget QuotesPrice quotesPrice) {
 
-    protected Map<String, LocalQuotesData> convertQuotesDataKeys(Map<String, MarketQuotesData> coinMap) {
-        return coinMap.values().stream()
-                .map (this::convertMarketQuotesData)
-                .collect(Collectors.toMap(quotesData -> currencyService.fromId(quotesData.getId()).name(), identity()));
+        quotesPrice.setCode(code);
+        quotesPrice.setId(currencyService.fromCode(code).getId());
     }
 
-    @Mapping( target = "id", ignore = true)
-    protected abstract LocalQuote convertMarketQuote (MarketQuote marketQuote);
-
-    protected LocalQuote convertMarketQuote (MarketQuote marketQuote, String symbol) {
-        LocalQuote localQuote = convertMarketQuote(marketQuote);
-        localQuote.setId(currencyService.fromSymbol(symbol).getId());
-        return localQuote;
-    }
-
-    protected  Map<String, LocalQuote>  convertQuotesKeys (Map<String, MarketQuote> quoteMap) {
+    protected List<QuotesPrice> convertQuotesPrice(Map<String, ExternalQuotesDataPrice> quoteMap) {
         return quoteMap.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> convertMarketQuote(entry.getValue(), entry.getKey())));
+            .map(entry -> mapQuotesPrice(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toList());
+    }
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "code", ignore = true)
+    @Mapping(source = "cmcRank", target = "worldRank")
+    public abstract QuotesResponse mapExternalQuotesData(ExternalQuotesData exQuotesData);
+
+    @AfterMapping
+    protected void postMapping(ExternalQuotesData exQuotesData,
+                               @MappingTarget QuotesResponse quotesResponse) {
+
+        Currency currency = currencyService.fromExternalId(exQuotesData.getExternalId());
+        quotesResponse.setId(currency.getId());
+        quotesResponse.setCode(currency.getCode());
     }
 }

@@ -1,0 +1,522 @@
+openapi: "3.0.2"
+info:
+  title: Roadmap Open API
+  description: Roadmap Application API Documentation
+  version: "1.0"
+  contact:
+    name: Viorel Contu
+    url: "https://github.com/viorelcontu/roadmap/"
+servers:
+  - url: http://localhost:8080
+    description: localhost server
+paths:
+  /map/cryptocurrency:
+    get:
+      tags:
+        - Currency Map
+      summary: Crypto-currency mappings
+      description: Fetches a list of crypto-currencies supported together with their ids and name.
+      operationId: getCryptoMapping
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Currency"
+              examples:
+                first:
+                  $ref: '#/components/examples/CryptoMap'
+# TODO: implement authorization
+#        '401':
+#          description: Unauthorized
+#        '403':
+#          description: Forbidden
+
+  /map/fiatcurrency:
+    get:
+      tags:
+        - Currency Map
+      summary: Fiat currencies mappings
+      description: Fetches a list of fiat currencies supported together with their ids and name.
+      operationId: getFiatMapping
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Currency'
+              examples:
+                first:
+                  $ref: '#/components/examples/FiatMap'
+
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '403':
+#          description: Forbidden
+
+  /quotes:
+    get:
+      tags:
+        - Market Quotes
+      summary: Market quotes by id
+      description: |
+        Obtain crypto-currency quotes by id query param. **This is an external request endpoint!**
+
+        It is necessary to configure application with CoinMarketCap security token. See **README.MD** for configuration.
+      operationId: getQuotesByIdQuery
+      parameters:
+        - name: id
+          in: query
+          description: Crypto-currency **id**. Obtained from `/map/cryptocurrency`
+          required: true
+          style: form
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          allowEmptyValue: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotesResponse'
+              examples:
+                first:
+                  $ref: '#/components/examples/QuoteBTC'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatus'
+
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '402':
+#            description: Payment required
+#        '403':
+#          description: Forbidden
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatus'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatus'
+
+  '/quotes/{symbol}':
+    get:
+      tags:
+        - Market Quotes
+      summary: Market quotes by symbol
+      description: |
+        Obtain crypto-currency quotes by symbol path param. **This is an external request endpoint!**
+
+        It is necessary to configure application with CoinMarketCap security token. See **README.MD** for configuration.
+      operationId: getQuotesBySymbol
+      parameters:
+        - name: symbol
+          in: path
+          description: symbol
+          required: true
+          schema:
+            type: string
+            minLength: 3
+            default: BTC
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotesResponse'
+              examples:
+                first:
+                  $ref: '#/components/examples/QuoteBTC'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatus'
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '402':
+#            description: Payment required
+#        '403':
+#          description: Forbidden
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatus'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatus'
+
+  /users:
+   get:
+     tags:
+       - User Config
+     summary: List all users
+     operationId: findAllUsingGET
+     responses:
+       '200':
+         description: OK
+         content:
+           application/json:
+             schema:
+               type: array
+               items:
+                 $ref: '#/components/schemas/User'
+             examples:
+               first:
+                 $ref: '#/components/examples/UserListing'
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '403':
+#          description: Forbidden
+
+   post:
+     tags:
+       - User Config
+     summary: Create new user
+     operationId: createUsingPOST
+     requestBody:
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/User'
+     responses:
+       '201':
+         description: Created
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/User'
+       '400':
+         description: Bad request
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ApiStatus'
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '403':
+#          description: Forbidden
+
+  '/users/{id}':
+   get:
+     tags:
+       - User Config
+     summary: Get user by id
+     operationId: getUserDetails
+     parameters:
+       - name: id
+         in: path
+         description: id
+         required: true
+         schema:
+           $ref: '#/components/schemas/UserId'
+     responses:
+       '200':
+         description: OK
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/User'
+       '400':
+         description: Bad request
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ApiStatus'
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '403':
+#          description: Forbidden
+       '404':
+         description: Not Found
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ApiStatus'
+
+   put:
+     tags:
+       - User Config
+     summary: Update user by id
+     operationId: updateUsingPUT
+     parameters:
+       - name: id
+         in: path
+         description: id
+         required: true
+         schema:
+           $ref: '#/components/schemas/UserId'
+     requestBody:
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/User'
+     responses:
+       '202':
+         description: Accepted
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/User'
+       '400':
+         description: Bad request
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ApiStatus'
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '403':
+#          description: Forbidden
+       '404':
+         description: Not Found
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ApiStatus'
+
+   delete:
+     tags:
+       - User Config
+     summary: Delete user
+     operationId: deleteUsingDELETE
+     parameters:
+       - name: id
+         in: path
+         description: id
+         required: true
+         schema:
+           $ref: '#/components/schemas/UserId'
+     responses:
+       '204':
+         description: No content
+       '400':
+         description: Bad request
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/ApiStatus'
+# TODO implement authorization
+#        '401':
+#          description: Unauthorized
+#        '403':
+#          description: Forbidden
+       '404':
+        description : Not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiStatus'
+
+components:
+  schemas:
+    Currency:
+      title: Currency
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 3
+        id:
+          type: integer
+        name:
+          type: string
+      additionalProperties: false
+      example:
+        code: BTC
+        id: 1
+        name: Bitcoin
+
+    QuotesResponse:
+      title: Crypto-currency details
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 3
+        id:
+          type: integer
+          minimum: 1
+        name:
+          type: string
+        worldRank:
+          type: integer
+        lastUpdated:
+          type: string
+          format: 'date-time'
+        quote:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotesPrice'
+      additionalProperties: false
+      example:
+        code: BTC
+        id: 1
+        name: Bitcoin
+        worldRank: 1
+        lastUpdated: '2019-07-11T02:17:31Z'
+        quote:
+          -
+            code: USD
+            id: 101
+            price: 12030.1390711
+            volume24h: 32511211106.084
+            percentChange1h: 0.701379
+            percentChange24h: -6.84533
+            percentChange7d: 2.3863
+            marketCap: 214267146836.1703
+
+    QuotesPrice:
+      type: object
+      title: Market price quote
+      properties:
+        id:
+          type: integer
+        price:
+          type: number
+        volume24h:
+          type: number
+        percentChange1h:
+          type: number
+        percentChange24h:
+          type: number
+        percentChange7d:
+          type: number
+        marketCap:
+          type: number
+      additionalProperties: false
+
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      example:
+        id: 1
+        name: John Doe
+      required:
+        - id
+        - name
+      additionalProperties: false
+
+    UserId:
+      type: integer
+      example: 1
+
+    ApiStatus:
+      title: Api Error Status
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        developerMessage:
+          type: string
+      additionalProperties: false
+      example:
+          status: 404 NOT_FOUND
+          message: 'Resource with id: 5 not found'
+          developerMessage: 'ResourceNotFoundException: Resource with id: 5 not found'
+
+
+  examples:
+    CryptoMap:
+      summary: "crypto-currency mapping"
+      value: |
+        [
+          {
+            "code": "BTC",
+            "id": 1,
+            "name": "Bitcoin"
+          },
+          {
+            "code": "ETH",
+            "id": 2,
+            "name": "Ethereum"
+        ]
+    FiatMap:
+      summary: "fiat currency mapping"
+      value: |
+        [
+          {
+            "code": "USD",
+            "id": 101,
+            "name": "United States Dollar"
+          },
+          {
+            "code": "EUR",
+            "id": 102,
+            "name": "Euro"
+          }
+        ]
+    QuoteBTC:
+      summary: "BTC with USD quoting"
+      value: |
+        {
+          "code": "BTC",
+          "id": 1,
+          "name": "Bitcoin",
+          "worldRank": 1,
+          "lastUpdated": "2019-07-11T02:17:31Z",
+          "quote": [
+            {
+              "code": "USD",
+              "id": 101,
+              "price": 12030.1390711,
+              "volume24h": 32511211106.084,
+              "percentChange1h": 0.701379,
+              "percentChange24h": -6.84533,
+              "percentChange7d": 2.3863,
+              "marketCap": 214267146836.1703
+            }
+          ]
+        }
+    UserListing:
+      summary: "list of users"
+      value: |
+        [
+          {
+            "id": 1,
+            "name": "John Doe"
+          },
+          {
+            "id": 2,
+            "name": "Bill White"
+          }
+        ]

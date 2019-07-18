@@ -1,11 +1,9 @@
 package com.endava.practice.roadmap.domain.model.enums;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.util.UriComponents;
 
 import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 
-@RequiredArgsConstructor
 public enum CoinMarketApi {
 
     MAPPING("map"),
@@ -15,11 +13,14 @@ public enum CoinMarketApi {
     QUOTES("quotes/latest"),
     QUOTES_HISTORY("quotes/historical");
 
-    private static String apiPrefix = "/v1/cryptocurrency/";
+    private final String path;
 
-    private final String apiPath;
+    CoinMarketApi(String apiPath) {
+        String apiPrefix = "/v1/cryptocurrency/";
+        this.path = apiPrefix + apiPath;
+    }
 
     public UriComponents buildUri(final String query) {
-        return newInstance().scheme("https").path(apiPrefix + apiPath).query(query).build();
+        return newInstance().path(path).query(query).build();
     }
 }

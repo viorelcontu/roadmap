@@ -4,10 +4,15 @@ import com.endava.practice.roadmap.domain.model.enums.Currency;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
+import static java.util.Comparator.comparing;
 import static java.util.EnumSet.allOf;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -15,29 +20,19 @@ import static java.util.stream.Collectors.toMap;
 @Service
 public class CurrencyService {
 
-    private final Map <String, Currency> symbolMap;
-
-    @Getter
-    private final Map<String, Currency> cryptoMap;
-
-    @Getter
-    private final Map<String, Currency> fiatMap;
-
+    private final Map<String, Currency> codeMap;
     private final Map<Integer, Currency> idMap;
-
     private final Map<Integer, Currency> externalIdMap;
 
+    @Getter
+    private final Set<Currency> cryptoSet;
+
+    @Getter
+    private final Set<Currency> fiatSet;
+
     {
-        symbolMap = unmodifiableMap(allOf(Currency.class).stream()
+        codeMap = unmodifiableMap(allOf(Currency.class).stream()
                 .collect(LinkedHashMap::new, (map, crypto) -> map.put(crypto.name(), crypto), Map::putAll));
-
-        cryptoMap = unmodifiableMap(allOf(Currency.class).stream()
-                .filter(Currency::isCrypto)
-                .collect(LinkedHashMap::new, (map, crypto) -> map.put(crypto.name(), crypto), Map::putAll));
-
-        fiatMap = unmodifiableMap(allOf(Currency.class).stream()
-                .filter(Currency::isFiat)
-                .collect(LinkedHashMap::new, (map, fiat) -> map.put(fiat.name(), fiat), Map::putAll));
 
         idMap = unmodifiableMap(allOf(Currency.class).stream()
                 .collect(toMap(Currency::getId, identity())));
@@ -45,6 +40,15 @@ public class CurrencyService {
         externalIdMap = unmodifiableMap(allOf(Currency.class).stream()
                 .collect(toMap(Currency::getExternalId, identity())));
 
+        Comparator<Currency> comparator = comparing(Currency::getId);
+
+        cryptoSet = unmodifiableSet(allOf(Currency.class).stream()
+                .filter(Currency::isCrypto)
+                .collect(() -> new TreeSet<>(comparator), TreeSet::add, TreeSet::addAll));
+
+        fiatSet = unmodifiableSet(allOf(Currency.class).stream()
+                .filter(Currency::isFiat)
+                .collect(() -> new TreeSet<>(comparator), TreeSet::add, TreeSet::addAll));
     }
 
     public Currency fromId (int id) {
@@ -55,8 +59,8 @@ public class CurrencyService {
         return externalIdMap.get(externalId);
     }
 
-    public Currency fromSymbol (String symbol) {
-        return symbolMap.get(symbol);
+    public Currency fromCode(String code) {
+        return codeMap.get(code);
     }
 
 }

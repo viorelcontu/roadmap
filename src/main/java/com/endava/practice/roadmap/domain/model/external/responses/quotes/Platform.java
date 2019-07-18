@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.model.coinmarket;
+package com.endava.practice.roadmap.domain.model.external.responses.quotes;
 
 import lombok.Data;
 

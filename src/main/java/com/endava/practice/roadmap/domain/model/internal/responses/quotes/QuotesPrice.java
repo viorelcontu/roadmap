@@ -1,5 +1,5 @@
 
-package com.endava.practice.roadmap.domain.model.quotes;
+package com.endava.practice.roadmap.domain.model.internal.responses.quotes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -10,6 +10,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Data
 @JsonInclude(NON_NULL)
 @JsonPropertyOrder({
+        "code",
         "id",
         "price",
         "volume24h",
@@ -17,9 +18,11 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         "percentChange24h",
         "percentChange7d",
         "marketCap"})
-public class LocalQuote {
+public class QuotesPrice {
 
-    private Integer id ;
+    private String code;
+
+    private Integer id;
 
     private Double price;
 

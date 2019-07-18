@@ -1,5 +1,5 @@
 
-package com.endava.practice.roadmap.domain.model.coinmarket;
+package com.endava.practice.roadmap.domain.model.external.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
-public class Status {
+public class ExternalStatus {
 
     private Instant timestamp;
 

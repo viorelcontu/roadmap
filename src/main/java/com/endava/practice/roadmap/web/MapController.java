@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,12 +17,12 @@ public class MapController {
     private final CurrencyService currencyService;
 
     @GetMapping ("/cryptocurrency")
-    Map<String, Currency> getCryptoMapping () {
-        return currencyService.getCryptoMap();
+    Set<Currency> getCryptoMapping () {
+        return currencyService.getCryptoSet();
     }
 
     @GetMapping("/fiatcurrency")
-    Map<String, Currency> getFiatMapping () {
-        return currencyService.getFiatMap();
+    Set<Currency> getFiatMapping () {
+        return currencyService.getFiatSet();
     }
 }

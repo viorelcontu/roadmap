@@ -1,27 +1,29 @@
 
-package com.endava.practice.roadmap.domain.model.quotes;
+package com.endava.practice.roadmap.domain.model.internal.responses.quotes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
 import java.time.Instant;
-import java.util.Map;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
 @JsonPropertyOrder ({
+        "code",
         "id",
         "name",
         "worldRank",
         "lastUpdated",
-        "quote"
-})
+        "quote"})
 @JsonInclude(NON_NULL)
-public class LocalQuotesData {
+public class QuotesResponse {
 
-    private Integer Id;
+    private String code;
+
+    private Integer id;
 
     private String name;
 
@@ -29,5 +31,5 @@ public class LocalQuotesData {
 
     private Instant lastUpdated;
 
-    private Map<String, LocalQuote> quote;
-}
+    private List<QuotesPrice> quote;
+    }
