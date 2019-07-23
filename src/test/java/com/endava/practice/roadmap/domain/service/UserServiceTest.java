@@ -1,8 +1,8 @@
 package com.endava.practice.roadmap.domain.service;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
-import com.endava.practice.roadmap.domain.exception.BadRequestException;
-import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
+import com.endava.practice.roadmap.domain.model.exceptions.BadRequestException;
+import com.endava.practice.roadmap.domain.model.exceptions.ResourceNotFoundException;
 import com.endava.practice.roadmap.domain.mapper.UserMapper;
 import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.domain.model.internal.UserDto;

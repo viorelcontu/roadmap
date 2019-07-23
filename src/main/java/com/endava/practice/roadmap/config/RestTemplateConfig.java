@@ -19,8 +19,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import java.io.IOException;
 import java.util.Collections;
 
-import static com.endava.practice.roadmap.domain.exception.LocalInternalServerError.ofUnspecified;
-import static com.endava.practice.roadmap.domain.exception.LocalInternalServerError.ofWrongMarketToken;
+import static com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError.ofUnspecified;
+import static com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError.ofWrongMarketToken;
 
 @Configuration
 @Profile({"dev", "prod"})

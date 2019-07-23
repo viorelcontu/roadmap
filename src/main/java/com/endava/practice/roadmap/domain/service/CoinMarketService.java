@@ -1,6 +1,6 @@
 package com.endava.practice.roadmap.domain.service;
 
-import com.endava.practice.roadmap.domain.exception.LocalInternalServerError;
+import com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError;
 import com.endava.practice.roadmap.domain.mapper.QuotesMapper;
 import com.endava.practice.roadmap.domain.model.enums.Currency;
 import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesData;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
-import static com.endava.practice.roadmap.domain.exception.BadRequestException.ofWrongCrypto;
+import static com.endava.practice.roadmap.domain.model.exceptions.BadRequestException.ofWrongCrypto;
 import static com.endava.practice.roadmap.domain.model.enums.CoinMarketApi.QUOTES;
 import static java.lang.String.valueOf;
 import static java.util.Optional.ofNullable;

@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.exception;
+package com.endava.practice.roadmap.domain.model.exceptions;
 
 import lombok.NoArgsConstructor;
 

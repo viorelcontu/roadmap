@@ -1,8 +1,8 @@
 package com.endava.practice.roadmap.web;
 
-import com.endava.practice.roadmap.domain.exception.BadRequestException;
-import com.endava.practice.roadmap.domain.exception.LocalInternalServerError;
-import com.endava.practice.roadmap.domain.exception.ResourceNotFoundException;
+import com.endava.practice.roadmap.domain.model.exceptions.BadRequestException;
+import com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError;
+import com.endava.practice.roadmap.domain.model.exceptions.ResourceNotFoundException;
 import com.endava.practice.roadmap.domain.model.internal.ApiStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
