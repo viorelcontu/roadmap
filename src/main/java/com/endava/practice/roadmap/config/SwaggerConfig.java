@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Profile("!prod")
+@Profile("dev")
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {

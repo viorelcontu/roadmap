@@ -1,77 +1,69 @@
 package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
+import com.endava.practice.roadmap.util.TestUsers;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.endava.practice.roadmap.util.TestUtils.USER2_ID;
-import static com.endava.practice.roadmap.util.TestUtils.USER2_NAME;
-import static com.endava.practice.roadmap.util.TestUtils.USER_ID;
-import static com.endava.practice.roadmap.util.TestUtils.USER_NAME;
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerTest {
 
     @Autowired
     private ObjectWriter objectWriter;
 
-    private UserDto user;
+    private UserDto dto;
+    private String userName;
 
     @BeforeEach
     void setUp() {
-        user = new UserDto(USER_ID, USER_NAME);
+        dto = TestUsers.CLIENT_EXISTING.buildUserDto();
+        userName = dto.getUsername();
     }
 
     @Test
-    void shouldReturnExistingUserById() throws Exception {
-        when(userServiceMock.findOne(USER_ID)).thenReturn(user);
+    void getAllUsers200() throws Exception {
+        TestUsers user1 = TestUsers.MANAGER_EXISTING;
+        TestUsers user2 = TestUsers.CLIENT_EXISTING;
 
-        mockMvc.perform(get("/users/{id}", USER_ID))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(JSON_UTF8))
-            .andExpect(jsonPath("$.id").value(USER_ID))
-            .andExpect(jsonPath("$.name").value(USER_NAME));
-
-        verify(userServiceMock).findOne(USER_ID);
-    }
-
-    @Test
-    void shouldReturnAllUsers() throws Exception {
-        UserDto anotherUser = new UserDto(USER2_ID, USER2_NAME);
-
-        when(userServiceMock.findAll()).thenReturn(asList(user, anotherUser));
+        when(userServiceMock.findAll()).thenReturn(asList(user1.buildUserDto(), user2.buildUserDto()));
 
         mockMvc.perform(get("/users"))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].id").value(USER_ID))
-            .andExpect(jsonPath("$[0].name").value(USER_NAME))
-            .andExpect(jsonPath("$[1].id").value(USER2_ID))
-            .andExpect(jsonPath("$[1].name").value(USER2_NAME));
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[*].username", containsInAnyOrder(user1.getUsername(), user2.getUsername())))
+                .andExpect(jsonPath("$[*].email", containsInAnyOrder(user1.getEmail(), user2.getEmail())));
 
         verify(userServiceMock).findAll();
     }
 
     @Test
-    void shouldCreateNewUser() throws Exception {
-        when(userServiceMock.create(user)).thenReturn(user);
+    void getByUserName200() throws Exception {
+        when(userServiceMock.findOne(userName)).thenReturn(dto);
 
-        String requestJson = objectWriter.writeValueAsString(user);
+        mockMvc.perform(get("/users/{username}", userName))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(JSON_UTF8))
+            .andExpect(jsonPath("$.username").value(dto.getUsername()));
+
+        verify(userServiceMock).findOne(userName);
+    }
+
+    @Test
+    void postNewUser201() throws Exception {
+        when(userServiceMock.create(dto)).thenReturn(dto);
+
+        final String requestJson = objectWriter.writeValueAsString(dto);
 
         mockMvc.perform(
             post("/users")
@@ -80,32 +72,34 @@ public class UserControllerTest extends BaseControllerTest {
             .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(content().contentType(JSON_UTF8))
-            .andExpect(jsonPath("$.id").value(USER_ID))
-            .andExpect(jsonPath("$.name").value(USER_NAME));
+            .andExpect(jsonPath("$.username", equalTo(dto.getUsername())));
 
-        verify(userServiceMock).create(user);
+        verify(userServiceMock).create(dto);
     }
 
     @Test
-    void shouldUpdateExistingUserById() throws Exception {
-        String requestJson = objectWriter.writeValueAsString(user);
+    void putUser202() throws Exception {
+        final String requestJson = objectWriter.writeValueAsString(dto);
+
+        when (userServiceMock.replace(dto.getUsername(), dto)).thenReturn(dto);
 
         mockMvc.perform(
-            put("/users/{id}", USER_ID)
+            put("/users/{username}", userName)
                 .contentType(JSON_UTF8)
                 .content(requestJson))
             .andDo(print())
-            .andExpect(status().isAccepted());
+            .andExpect(status().isAccepted())
+            .andExpect(jsonPath("$.username", equalTo(dto.getUsername())));;
 
-        verify(userServiceMock).update(USER_ID, user);
+        verify(userServiceMock).replace(userName, dto);
     }
 
     @Test
     void shouldDeleteExistingUser() throws Exception {
-        mockMvc.perform(delete("/users/{id}", USER_ID))
+        mockMvc.perform(delete("/users/{username}", userName))
             .andDo(print())
             .andExpect(status().isNoContent());
 
-        verify(userServiceMock).delete(USER_ID);
+        verify(userServiceMock).delete(userName);
     }
 }

@@ -21,7 +21,6 @@ import static java.util.Optional.ofNullable;
 
 @RequiredArgsConstructor
 @Service
-@Profile({"dev", "prod"})
 public class CoinMarketService implements MarketService {
 
     private final RestTemplate coinMarketRestClient;

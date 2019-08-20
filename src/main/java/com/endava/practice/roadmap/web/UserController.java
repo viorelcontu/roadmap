@@ -1,70 +1,50 @@
 package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
-import com.endava.practice.roadmap.domain.service.AbstractCrudService;
+import com.endava.practice.roadmap.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import javax.validation.Valid;
+import java.util.List;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
-public class UserController extends AbstractCrudController<UserDto, Long> {
+public class UserController {
 
     //TODO add token management for users
     //TODO add api-credit management for users.
 
-    private final AbstractCrudService userService;
+    private final UserService userService;
 
-    @Override
-    protected AbstractCrudService getService() {
-        return userService;
-    }
-
-    @GetMapping("/{id}")
-    @Override
-    public UserDto findOne(@PathVariable("id") final Long id) {
-        return super.findOne(id);
+    @GetMapping("/{username}")
+    public UserDto findOne(@PathVariable("username") final String userName) {
+        return userService.findOne(userName);
     }
 
     @GetMapping
-    @Override
     public List<UserDto> findAll() {
-        return super.findAll();
+        return userService.findAll();
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    @Override
     public UserDto create(@RequestBody @Valid final UserDto resource) {
-        return super.create(resource);
+        return userService.create(resource);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{username}")
     @ResponseStatus(ACCEPTED)
-    @Override
-    public void update(@PathVariable("id") final Long id, @RequestBody @Valid final UserDto user) {
-        super.update(id, user);
+    public UserDto replace(@PathVariable("username") final String userName, @RequestBody @Valid final UserDto user) {
+        return userService.replace(userName, user);
     }
 
-    @DeleteMapping("/{id}")
-    @Override
+    @DeleteMapping("/{username}")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable("id") final Long id) {
-        super.delete(id);
+    public void delete(@PathVariable("username") final String userName) {
+        userService.delete(userName);
     }
 }

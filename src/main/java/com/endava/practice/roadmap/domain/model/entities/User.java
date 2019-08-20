@@ -1,31 +1,54 @@
 package com.endava.practice.roadmap.domain.model.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import java.util.UUID;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Table(name = "users")
-@Data
+@EqualsAndHashCode (onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@Builder
+@AllArgsConstructor(access = PRIVATE)
 public class User implements ResourceWithId<Long> {
 
-    //TODO add tokens for users
-
+    @Column (name = "user_id")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQUENCE")
+    @SequenceGenerator(sequenceName = "sq_user_id", allocationSize = 10, initialValue = 100,  name = "USER_SEQUENCE")
+    @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "token", unique = true)
+    private UUID token;
+
+    @Column(name = "user_name", nullable = false, unique = true)
+    @Length(min = 4, max = 32)
+    private String username;
+
+    private String nickname;
+
+    @Email
+    private String email;
+
+    @ManyToOne
+    @JoinColumn (name = "group_id" )
     @NotNull
-    private String name;
+    private Group group;
+
+    @PositiveOrZero
+    @NotNull
+    private Integer credits;
+
+    @Column(nullable = false)
+    private Boolean active;
 }

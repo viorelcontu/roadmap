@@ -1,7 +1,7 @@
 package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.config.TestConfig;
-import com.endava.practice.roadmap.domain.service.AbstractCrudService;
+import com.endava.practice.roadmap.domain.service.UserService;
 import com.endava.practice.roadmap.domain.service.CurrencyService;
 import com.endava.practice.roadmap.domain.service.MarketService;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.Charset;
 
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @WebMvcTest
 @Import(TestConfig.class)
@@ -24,13 +25,13 @@ abstract public class BaseControllerTest {
     protected MockMvc mockMvc;
 
     public static final MediaType JSON_UTF8 = new MediaType (
-            MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
+            APPLICATION_JSON.getType(),
+            APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8")
         );
 
     @MockBean
-    AbstractCrudService userServiceMock;
+    UserService userServiceMock;
 
     @MockBean
     CurrencyService currencyService;

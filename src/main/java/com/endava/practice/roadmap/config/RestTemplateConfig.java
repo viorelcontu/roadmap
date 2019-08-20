@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
@@ -23,7 +22,6 @@ import static com.endava.practice.roadmap.domain.model.exceptions.LocalInternalS
 import static com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError.ofWrongMarketToken;
 
 @Configuration
-@Profile({"dev", "prod"})
 public class RestTemplateConfig {
 
     private static final String TOKEN_HEADER_NAME = "X-CMC_PRO_API_KEY";

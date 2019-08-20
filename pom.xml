@@ -11,23 +11,31 @@
 
     <groupId>com.endava.practice</groupId>
     <artifactId>roadmap</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
     <name>roadmap</name>
     <description>Java Road Map Practice</description>
 
     <properties>
+        <commons-lang3.version>3.8.1</commons-lang3.version>
         <java.version>1.8</java.version>
         <junit-jupiter-version>5.3.1</junit-jupiter-version>
-        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
-        <springfox-swagger.version>2.9.2</springfox-swagger.version>
+        <lombok.version>1.18.4</lombok.version>
+        <mapstruct.version>1.3.0.Final</mapstruct.version>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
         <mockito-core.version>2.21.0</mockito-core.version>
         <mockito-junit-jupiter.version>2.23.0</mockito-junit-jupiter.version>
-        <commons-lang3.version>3.8.1</commons-lang3.version>
         <rest-assured.version>3.3.0</rest-assured.version>
-        <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
-        <mapstruct.version>1.3.0.Final</mapstruct.version>
-        <lombok.version>1.18.4</lombok.version>
-        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <springfox-swagger.version>2.9.2</springfox-swagger.version>
+
+        <!-- default database provider  -->
+        <spring.database.profile>h2</spring.database.profile>
+        <h2.scope>runtime</h2.scope>
+
+        <!-- oracle and flyway db credentials  -->
+        <db.user>ROADMAP</db.user>
+        <db.password>roadmap1911</db.password>
+        <db.url>jdbc:oracle:thin:@//localhost:1521/orclpdb</db.url>
     </properties>
 
     <dependencies>
@@ -52,12 +60,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -88,6 +90,12 @@
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>${h2.scope}</scope>
         </dependency>
 
         <dependency>
@@ -127,6 +135,13 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -161,17 +176,76 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
+                <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>com.endava.practice.roadmap.component.**</exclude>
+                        <exclude>com.endava.practice.roadmap.integration.**</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <!-- display active profile in compile phase -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>show-profiles</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>active-profiles</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <profile>
+            <id>oracle</id>
+            <properties>
+                <spring.database.profile>oracle</spring.database.profile>
+                <h2.scope>test</h2.scope>
+                <flyway.version>6.0.3</flyway.version>
+                <ojdbc8.version>18.3.0.0</ojdbc8.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle.jdbc</groupId>
+                    <artifactId>ojdbc8</artifactId>
+                    <version>${ojdbc8.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>${flyway.version}</version>
+                        <configuration>
+                            <url>${db.url}</url>
+                            <user>${db.user}</user>
+                            <password>${db.password}</password>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <repositories>
+                <repository>
+                    <id>maven.oracle.com</id>
+                    <name>oracle-maven-repo</name>
+                    <url>https://maven.oracle.com</url>
+                    <layout>default</layout>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </releases>
+                </repository>
+            </repositories>
+        </profile>
         <profile>
             <id>run-its</id>
             <build>
@@ -179,6 +253,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven-failsafe-plugin.version}</version>
                         <configuration>
                             <additionalClasspathElements>
                                 <additionalClasspathElement>
@@ -187,7 +262,7 @@
                             </additionalClasspathElements>
                             <failIfNoTests>true</failIfNoTests>
                             <includes>
-                                <include>com.endava.practice.roadmap.component.**</include>
+                                <include>com.endava.practice.roadmap.integration.**</include>
                             </includes>
                         </configuration>
                         <executions>
@@ -203,5 +278,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

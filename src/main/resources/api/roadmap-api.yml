@@ -227,19 +227,19 @@ paths:
 #        '403':
 #          description: Forbidden
 
-  '/users/{id}':
+  '/users/{username}':
    get:
      tags:
        - User Config
      summary: Get user by id
      operationId: getUserDetails
      parameters:
-       - name: id
+       - name: username
          in: path
-         description: id
+         description: user login
          required: true
          schema:
-           $ref: '#/components/schemas/UserId'
+           $ref: '#/components/schemas/Username'
      responses:
        '200':
          description: OK
@@ -271,12 +271,12 @@ paths:
      summary: Update user by id
      operationId: updateUsingPUT
      parameters:
-       - name: id
+       - name: username
          in: path
-         description: id
+         description: user login
          required: true
          schema:
-           $ref: '#/components/schemas/UserId'
+           $ref: '#/components/schemas/Username'
      requestBody:
        content:
          application/json:
@@ -313,12 +313,12 @@ paths:
      summary: Delete user
      operationId: deleteUsingDELETE
      parameters:
-       - name: id
+       - name: username
          in: path
-         description: id
+         description: user login
          required: true
          schema:
-           $ref: '#/components/schemas/UserId'
+           $ref: '#/components/schemas/Username'
      responses:
        '204':
          description: No content
@@ -422,21 +422,46 @@ components:
       title: User
       type: object
       properties:
-        id:
-          type: integer
-        name:
+        username:
           type: string
-      example:
-        id: 1
-        name: John Doe
+          minLength: 4
+          maxLength: 32
+          pattern: ^(?=.{4,32}$)(?![_])(?!.*[_]{2})[a-z0-9_]+(?<![_])$
+        nickname:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - MANAGER
+            - ACCOUNTANT
+            - CLIENT
+        credits:
+          type: number
+          minimum: 0
+          default: 0
+        active:
+          type: boolean
+          default: true
       required:
-        - id
-        - name
+        - username
+        - role
+        -
+      example:
+        username: jdoe
+        nickname: John Doe
+        email: john.doe@gmail.com
+        role: CLIENT
+        credits: 0
+        active: true
       additionalProperties: false
 
-    UserId:
-      type: integer
-      example: 1
+    Username:
+      type: string
+      example: vcontu
 
     ApiStatus:
       title: Api Error Status

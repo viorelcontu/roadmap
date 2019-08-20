@@ -1,2 +1,7 @@
-{"id" : null
+{
+  "full_name": "Missing Username",
+  "email": "user_name",
+  "role": "CLIENT",
+  "credits": 0,
+  "active": true
 }

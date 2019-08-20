@@ -10,20 +10,9 @@ Host: localhost:8080
 Accept: application/json
 ###
 
-GET /users/5
+GET /users/lsky
 Host: localhost:8080
 Accept: application/json
-###
-
-PUT /users/3
-Host: localhost:8080
-Content-Type: application/json
-Accept: application/json
-
-{
-  "id": 3,
-  "name": "Altetnative User"
-}
 ###
 
 POST /users
@@ -32,12 +21,40 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id" : 100,
-  "name" : "Samantha Brown"
+  "username": "wwonka",
+  "nickname": "Willie Wonka",
+  "email": "w.wonka@gmail.com",
+  "role": "CLIENT",
+  "credits": 0,
+  "active": true
 }
 ###
-DELETE /users/3
+
+GET /users/wwonka
+Host: localhost:8080
+Accept: application/json
+###
+
+
+PUT /users/wwonka
+Host: localhost:8080
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "willie",
+  "nickname": "Waka Waka",
+  "email": "waa@gmail.com",
+  "role": "CLIENT",
+  "credits": 0,
+  "active": true
+}
+###
+
+DELETE /users/willie
 Host:localhost:8080
 Content-Type: application/json
 Accept: application/json
+
+###
 
