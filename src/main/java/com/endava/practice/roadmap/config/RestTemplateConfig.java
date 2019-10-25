@@ -12,14 +12,14 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.IOException;
 import java.util.Collections;
 
-import static com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError.ofUnspecified;
-import static com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError.ofWrongMarketToken;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Configuration
 public class RestTemplateConfig {
@@ -47,16 +47,10 @@ public class RestTemplateConfig {
         public void handleError(ClientHttpResponse response) throws IOException {
             log.debug("CoinMarketCap Exception, code {}, status {}", response.getStatusCode(), response.getStatusText());
 
-            switch (response.getStatusCode()) {
-                case UNAUTHORIZED:
-                    throw ofWrongMarketToken();
-                case BAD_REQUEST:
-                case FORBIDDEN:
-                case TOO_MANY_REQUESTS:
-                case INTERNAL_SERVER_ERROR:
-                default:
-                    throw ofUnspecified();
-            }
+            final String message = response.getStatusCode().equals(UNAUTHORIZED) ?
+                    "Wrong or missing Coin Market Token" : "Unknown internal error";
+
+            throw new HttpServerErrorException (response.getStatusCode(),message);
         }
     }
 

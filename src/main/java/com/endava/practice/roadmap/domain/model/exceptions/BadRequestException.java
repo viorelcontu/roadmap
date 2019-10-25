@@ -1,11 +1,16 @@
 package com.endava.practice.roadmap.domain.model.exceptions;
 
-public class BadRequestException extends RuntimeException {
+import org.springframework.web.client.HttpStatusCodeException;
 
-    public static BadRequestException ofWrongCrypto (Object currencyId) {
-        String errorMsg = String.format("Cryptocurrency with identifier: %s does not exist", currencyId);
-        return new BadRequestException(errorMsg);
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+public class BadRequestException extends HttpStatusCodeException {
+
+    public static BadRequestException ofWrongCrypto(Object currencyId) {
+        return new BadRequestException("Crypto-currency does not exist with id: %s" + currencyId);
     }
 
-    public BadRequestException(final String message) { super(message); }
+    public BadRequestException(final String message) {
+        super(BAD_REQUEST, message);
+    }
 }

@@ -1,15 +1,15 @@
 package com.endava.practice.roadmap.domain.service;
 
-import com.endava.practice.roadmap.domain.model.exceptions.LocalInternalServerError;
 import com.endava.practice.roadmap.domain.mapper.QuotesMapper;
 import com.endava.practice.roadmap.domain.model.enums.Currency;
 import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesData;
 import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesResponse;
 import com.endava.practice.roadmap.domain.model.internal.responses.quotes.QuotesResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
@@ -56,7 +56,7 @@ public class CoinMarketService implements MarketService {
 
         ExternalQuotesData exQuotesData = ofNullable(response.getBody())
             .map(exQuotesResponse -> exQuotesResponse.getData().get(valueOf(id)))
-            .orElseThrow(LocalInternalServerError::ofUnspecified);
+            .orElseThrow(() -> new HttpServerErrorException (HttpStatus.INTERNAL_SERVER_ERROR));
 
         return quotesMapper.mapExternalQuotesData(exQuotesData);
     }

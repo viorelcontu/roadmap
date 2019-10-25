@@ -1,13 +1,16 @@
 package com.endava.practice.roadmap.domain.model.exceptions;
 
-import lombok.NoArgsConstructor;
+import org.springframework.web.client.HttpStatusCodeException;
 
-@NoArgsConstructor
-public class ResourceNotFoundException extends RuntimeException {
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+public class ResourceNotFoundException extends HttpStatusCodeException {
 
     public static ResourceNotFoundException ofUserName(final Object userName) {
-        return new ResourceNotFoundException("Resource with id: " + userName + " not found");
+        return new ResourceNotFoundException("User not found with username: " + userName);
     }
 
-    public ResourceNotFoundException(final String message) { super(message); }
+    public ResourceNotFoundException(final String message) {
+        super(NOT_FOUND, message);
+    }
 }
