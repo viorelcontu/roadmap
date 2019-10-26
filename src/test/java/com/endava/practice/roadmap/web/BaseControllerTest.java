@@ -1,6 +1,7 @@
 package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.config.TestConfig;
+import com.endava.practice.roadmap.security.AuthenticationInterceptor;
 import com.endava.practice.roadmap.domain.service.UserService;
 import com.endava.practice.roadmap.domain.service.CurrencyService;
 import com.endava.practice.roadmap.domain.service.MarketService;
@@ -38,6 +39,9 @@ abstract public class BaseControllerTest {
 
     @MockBean
     MarketService marketService;
+
+    @MockBean
+    AuthenticationInterceptor authenticationInterceptor;
 
     @AfterEach
     void verifyMockedResources () {

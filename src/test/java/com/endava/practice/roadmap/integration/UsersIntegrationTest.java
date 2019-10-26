@@ -4,6 +4,7 @@ import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
 import com.endava.practice.roadmap.util.Resources;
 import com.endava.practice.roadmap.util.TestUsers;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -15,8 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+import static com.endava.practice.roadmap.security.AuthenticationInterceptor.AUTHENTICATION_HEADER;
 import static com.endava.practice.roadmap.util.TestUsers.*;
-import static io.restassured.RestAssured.expect;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static io.restassured.mapper.ObjectMapperType.JACKSON_2;
@@ -55,24 +56,39 @@ public class UsersIntegrationTest {
     }
 
     @Test
-    public void getAllUsersReturnsOK() {
-        //TODO improve
-
-        given()
-            .accept(JSON)
-        .expect()
-            .statusCode(OK.value())
+    public void getAllUsersReturnsOK200() {
+        authorizedRestCall()
         .when()
-            .get(usersPath);
+            .get(usersPath)
+        .then()
+            .statusCode(OK.value());
+    }
+
+    @Test
+    public void getAllUsersReturnsUnauthorized401(){
+        unauthorizedRestCall()
+        .when()
+            .get(usersPath)
+        .then()
+            .statusCode(UNAUTHORIZED.value());
+    }
+
+    @Test
+    public void getAllUsersReturnsForbidden403() {
+        forbiddenRestCall()
+        .when()
+            .get(usersPath)
+        .then()
+            .statusCode(FORBIDDEN.value());
     }
 
     @ParameterizedTest
-    @EnumSource(value = TestUsers.class, names = {"ADMIN_EXISTING", "MANAGER_EXISTING", "ACCOUNTANT_EXISTING", "CLIENT_EXISTING"})
+    @EnumSource(value = TestUsers.class, names = {"ADMIN_EXISTING", "MANAGER_EXISTING", "AUDIT_EXISTING", "CLIENT_EXISTING"})
     public void getOneUserReturnsOK(TestUsers user) {
-
-        given()
-            .accept(JSON)
-        .expect()
+        authorizedRestCall()
+        .when()
+            .get(usernamePathVariable.build(user.getUsername()))
+        .then()
             .statusCode(OK.value())
             .body(
                     JSON_USERNAME, equalTo(user.getUsername()),
@@ -80,19 +96,16 @@ public class UsersIntegrationTest {
                     JSON_EMAIL, equalTo(user.getEmail()),
                     JSON_ROLE, equalTo(user.getRole().name()),
                     JSON_CREDITS, equalTo(user.getCredits()),
-                    JSON_ACTIVE, equalTo(user.getActive()))
-        .when()
-            .get(usernamePathVariable.build(user.getUsername()));
+                    JSON_ACTIVE, equalTo(user.getActive()));
     }
 
     @Test
     public void getNonExistingReturnsNotFound404 () {
-        given()
-            .accept(JSON)
-        .expect()
-            .statusCode(NOT_FOUND.value())
+        authorizedRestCall()
         .when()
-            .get(usernamePathVariable.build(CLIENT_NON_EXISTING.getUsername()));
+            .get(usernamePathVariable.build(CLIENT_NON_EXISTING.getUsername()))
+        .then()
+            .statusCode(NOT_FOUND.value());
     }
 
     @Test
@@ -101,21 +114,19 @@ public class UsersIntegrationTest {
         final TestUsers source = CLIENT_NEW;
         final UserDto newUserDto = source.buildUserDto();
 
-        given()
-                .contentType(JSON)
-                .accept(JSON)
-                .with()
+        authorizedRestCall()
+            .with()
                 .body(newUserDto, JACKSON_2)
-                .expect()
-                .statusCode(CREATED.value())
-                .body(JSON_USERNAME, equalTo(source.getUsername()),
-                        JSON_FULL_NAME, equalTo(source.getNickname()),
-                        JSON_EMAIL, equalTo(source.getEmail()),
-                        JSON_ROLE, equalTo(source.getRole().name()),
-                        JSON_CREDITS, equalTo(source.getCredits()),
-                        JSON_ACTIVE, equalTo(source.getActive()))
-                .when()
-                .post(usersPath);
+        .when()
+            .post(usersPath)
+        .then()
+            .statusCode(CREATED.value())
+            .body(JSON_USERNAME, equalTo(source.getUsername()),
+                    JSON_FULL_NAME, equalTo(source.getNickname()),
+                    JSON_EMAIL, equalTo(source.getEmail()),
+                    JSON_ROLE, equalTo(source.getRole().name()),
+                    JSON_CREDITS, equalTo(source.getCredits()),
+                    JSON_ACTIVE, equalTo(source.getActive()));
 
         final Integer presence = jdbcTemplate.queryForObject("SELECT count(*) FROM users WHERE user_name = ?", Integer.class, source.getUsername());
         assertThat(presence).as("POST /users updating database").isEqualTo(1);
@@ -126,16 +137,13 @@ public class UsersIntegrationTest {
     @EnumSource(value = Resources.class,
             names = {"FILE_JSON_USER_MALFORMED", "FILE_JSON_USER_MISSING_NAME"})
     public void postUserJsonReturns400BadRequest(Resources resources) {
-    //TODO REVIEW
-        given()
-            .contentType(JSON)
-            .accept(JSON)
+        authorizedRestCall()
             .body(resources.getFile())
-        .expect()
-            .statusCode(BAD_REQUEST.value())
-            .body("status", equalTo("400 BAD_REQUEST"))
         .when()
-            .post(usersPath);
+            .post(usersPath)
+        .then()
+            .statusCode(BAD_REQUEST.value())
+            .body("status", equalTo("400 BAD_REQUEST"));
     }
 
     @Test
@@ -149,20 +157,18 @@ public class UsersIntegrationTest {
         final String updatedUserName = updateSource.getUsername();
         final UserDto updatedUserDto = updateSource.buildUserDto();
 
-        given()
-            .contentType(JSON)
-            .accept(JSON)
+        authorizedRestCall()
             .body(updatedUserDto, JACKSON_2)
-        .expect()
+        .when()
+            .put(usernamePathVariable.build(originalUserName))
+        .then()
             .statusCode(ACCEPTED.value())
             .body(JSON_USERNAME, equalTo(updatedUserName),
                     JSON_FULL_NAME, equalTo(updateSource.getNickname()),
                     JSON_EMAIL, equalTo(updateSource.getEmail()),
                     JSON_ROLE, equalTo(updateSource.getRole().name()),
                     JSON_CREDITS, equalTo(updateSource.getCredits()),
-                    JSON_ACTIVE, equalTo(updateSource.getActive()))
-        .when()
-            .put(usernamePathVariable.build(originalUserName));
+                    JSON_ACTIVE, equalTo(updateSource.getActive()));
 
         final Integer originalExists = jdbcTemplate.queryForObject("SELECT count(*) FROM users WHERE user_name = ?", Integer.class, originalUserName);
         assertThat(originalExists).as("PUT /users user stayed the same").isEqualTo(0);
@@ -175,24 +181,23 @@ public class UsersIntegrationTest {
 
     @Test
     public void putMissingUserReturnsNotFound404 () {
-        given()
-            .contentType(JSON)
-            .accept(JSON)
+        authorizedRestCall()
             .body(CLIENT_2_NEW.buildUserDto(), JACKSON_2)
-        .expect()
-            .statusCode(NOT_FOUND.value())
         .when()
-            .put(usernamePathVariable.build(CLIENT_NON_EXISTING.getId()));
+            .put(usernamePathVariable.build(CLIENT_NON_EXISTING.getId()))
+        .then()
+            .statusCode(NOT_FOUND.value());
     }
 
     @Test
     public void deleteUserReturnsNoContent204 () {
         userRepository.save(CLIENT_NEW.buildUser());
 
-        expect()
-            .statusCode(NO_CONTENT.value())
+        authorizedRestCall()
         .when()
-            .delete(usernamePathVariable.build(CLIENT_NEW.getUsername()));
+            .delete(usernamePathVariable.build(CLIENT_NEW.getUsername()))
+        .then()
+            .statusCode(NO_CONTENT.value());
 
         assertThat(userRepository.existsByUsernameIgnoreCase(CLIENT_NEW.getUsername()))
             .as("DELETE /user").isFalse();
@@ -200,9 +205,29 @@ public class UsersIntegrationTest {
 
     @Test
     public void deleteNonExistingUserReturnsNotFound404 () {
-        expect()
-            .statusCode(NOT_FOUND.value())
+        authorizedRestCall()
         .when()
-            .delete(usernamePathVariable.build(CLIENT_NON_EXISTING.getUsername()));
+            .delete(usernamePathVariable.build(CLIENT_NON_EXISTING.getUsername()))
+        .then()
+            .statusCode(NOT_FOUND.value());
+    }
+
+    private RequestSpecification authorizedRestCall() {
+        return restCallForUser(MANAGER_EXISTING);
+    }
+
+    private RequestSpecification unauthorizedRestCall() {
+        return restCallForUser(CLIENT_NON_EXISTING);
+    }
+
+    private RequestSpecification forbiddenRestCall() {
+        return restCallForUser(CLIENT_EXISTING);
+    }
+
+    private RequestSpecification restCallForUser(TestUsers user) {
+        return given()
+                .contentType(JSON)
+                .accept(JSON)
+                .header(AUTHENTICATION_HEADER, user.getToken());
     }
 }

@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.endava.practice.roadmap" level="DEBUG"/>
+    <logger name="com.endava.practice.roadmap" level="INFO"/>
 
     <root level ="INFO">
         <appender-ref ref = "STDOUT"/>

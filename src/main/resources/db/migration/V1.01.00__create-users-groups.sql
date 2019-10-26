@@ -26,25 +26,27 @@ CREATE TABLE groups
     CONSTRAINT pk_groups PRIMARY KEY (group_id)
 );
 
--- root can add other privileged users
--- onboarding can add new clients
--- accounting can register payments
--- audit can see history of transactions
--- services can used payed services
+
+-- OPERATOR_ADMIN(8), -> create/read/update/delete operators
+-- CLIENT_ADMIN(6), -> create/read/update/delete clients
+-- CREDIT_ADMIN(4), -> create/read/updated payments
+-- HISTORY_AUDIT(2), -> read request history
+-- SERVICE_USER(0); -> use payed services
+
+
 CREATE TABLE groups_permissions
 (
     group_id        NUMBER(1),
     permission_id   NUMBER(1),
-    permission_name VARCHAR2(10) GENERATED ALWAYS AS (
+    permission_name VARCHAR2(14) GENERATED ALWAYS AS (
                         decode(permission_id,
-                               8, 'ROOT',
-                               6, 'ONBOARDING',
-                               4, 'ACCOUNTING',
-                               2, 'AUDIT',
+                               8, 'OPERATOR_ADMIN',
+                               6, 'CLIENT_ADMIN',
+                               2, 'HISTORY',
                                0, 'SERVICES')) VIRTUAL,
     CONSTRAINT pk_groups_permissions
         PRIMARY KEY (group_id, permission_id),
-    CONSTRAINT ck_permission_enum CHECK ( permission_id IN (0, 2, 4, 6, 8))
+    CONSTRAINT ck_permission_enum CHECK ( permission_id IN (0, 2, 6, 8))
 );
 
 ALTER TABLE users

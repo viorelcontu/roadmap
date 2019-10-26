@@ -5,20 +5,68 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
+#ROOT X-API-KEY: c4d81355-19dd-4c45-a755-0d19f3ea402c
+#OPERATOR X-API-KEY: 970f88cb-2900-4531-a4a8-719ae882058c
+#SERVICE X-API-KEY: 5f0909af-4672-4824-807d-087730c7ec62
+
+#SHOULD RETURN 401 UNAUTHORIZED
 GET /users
 Host: localhost:8080
 Accept: application/json
 ###
 
+#SHOULD RETURN 403 FORBIDDEN
+GET /users
+Host: localhost:8080
+Accept: application/json
+X-API-KEY: 5f0909af-4672-4824-807d-087730c7ec62
+###
+
+#SHOULD GIVE RESULTS
+GET /users
+Host: localhost:8080
+Accept: application/json
+X-API-KEY: 970f88cb-2900-4530-a4a8-719ae882058c
+###
+
+#SHOULD GIVE RESULTS
+GET /users
+Host: localhost:8080
+Accept: application/json
+X-API-KEY: c4d81355-19dd-4c45-a755-0d19f3ea402c
+###
+
+######################################
+
+#UNAUTHORIZED 401
 GET /users/lsky
 Host: localhost:8080
 Accept: application/json
 ###
 
+#FORBIDDEN 403
+GET /users/vcontu
+Host: localhost:8080
+Accept: application/json
+X-API-KEY: 5f0909af-4672-4824-807d-087730c7ec62
+###
+
+#SHOULD BE OK
+GET /users/vcontu
+Host: localhost:8080
+Accept: application/json
+X-API-KEY: 970f88cb-2900-4530-a4a8-719ae882058c
+###
+
+
+###
+
+## SHOULD FAIL BECAUSE CLIENT USER
 POST /users
 Host: localhost:8080
 Content-Type: application/json
 Accept: application/json
+X-API-KEY: 5f0909af-4672-4824-807d-087730c7ec62
 
 {
   "username": "wwonka",
@@ -30,19 +78,31 @@ Accept: application/json
 }
 ###
 
-GET /users/wwonka
-Host: localhost:8080
-Accept: application/json
-###
-
-
-PUT /users/wwonka
+## SHOULD BE OK because client_admin
+POST /users
 Host: localhost:8080
 Content-Type: application/json
 Accept: application/json
+X-API-KEY: c4d81355-19dd-4c45-a755-0d19f3ea402c
 
 {
-  "username": "willie",
+  "username": "wwonka",
+  "nickname": "Willie Wonka",
+  "email": "w.wonka@gmail.com",
+  "role": "MANAGER",
+  "credits": 0,
+  "active": true
+}
+###
+
+PUT /users/vcontu
+Host: localhost:8080
+Content-Type: application/json
+Accept: application/json
+X-API-KEY: 970f88cb-2900-4530-a4a8-719ae882058c
+
+{
+  "username": "looser",
   "nickname": "Waka Waka",
   "email": "waa@gmail.com",
   "role": "CLIENT",
@@ -55,6 +115,7 @@ DELETE /users/willie
 Host:localhost:8080
 Content-Type: application/json
 Accept: application/json
+X-API-KEY: c4d81355-19dd-4c45-a755-0d19f3ea402c
 
 ###
 

@@ -1,7 +1,9 @@
 package com.endava.practice.roadmap.domain.service;
 
 import com.endava.practice.roadmap.domain.mapper.QuotesMapper;
+import com.endava.practice.roadmap.domain.model.annotations.RequirePermission;
 import com.endava.practice.roadmap.domain.model.enums.Currency;
+import com.endava.practice.roadmap.domain.model.enums.Permission;
 import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesData;
 import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesResponse;
 import com.endava.practice.roadmap.domain.model.internal.responses.quotes.QuotesResponse;
@@ -14,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
+import static com.endava.practice.roadmap.domain.model.enums.Permission.SERVICES;
 import static com.endava.practice.roadmap.domain.model.exceptions.BadRequestException.ofWrongCrypto;
 import static com.endava.practice.roadmap.domain.model.enums.CoinMarketApi.QUOTES;
 import static java.lang.String.valueOf;
@@ -21,7 +24,7 @@ import static java.util.Optional.ofNullable;
 
 @RequiredArgsConstructor
 @Service
-public class CoinMarketService implements MarketService {
+public class MarketServiceImpl implements MarketService {
 
     private final RestTemplate coinMarketRestClient;
 
@@ -30,6 +33,7 @@ public class CoinMarketService implements MarketService {
     private final CurrencyService currencyService;
 
     @Override
+    @RequirePermission(SERVICES)
     public QuotesResponse getQuotes(final int id) {
 
         Optional<Integer> externalId = ofNullable(currencyService.fromId(id))
@@ -40,6 +44,7 @@ public class CoinMarketService implements MarketService {
     }
 
     @Override
+    @RequirePermission(SERVICES)
     public QuotesResponse getQuotes(final String symbol) {
 
         Optional<Integer> externalId = ofNullable(currencyService.fromCode(symbol))

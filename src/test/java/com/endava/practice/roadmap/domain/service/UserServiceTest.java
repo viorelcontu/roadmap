@@ -34,7 +34,7 @@ class UserServiceTest {
     EntityMapper mapperMock;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private User client;
     private User clientNew;
@@ -125,7 +125,7 @@ class UserServiceTest {
         when(userRepositoryMock.save(client)).thenReturn(client);
         when(mapperMock.mapData(client)).thenReturn(clientNewDto);
 
-        final UserDto userResult = userService.replace(userName, clientNewDto);
+        final UserDto userResult = userService.replace(clientNewDto, userName);
         assertThat(userResult).isEqualToComparingFieldByField(CLIENT_2_NEW.buildUserDto());
 
         verify(userRepositoryMock).findByUsernameIgnoreCase(userName);
@@ -140,7 +140,7 @@ class UserServiceTest {
 
         when(userRepositoryMock.findByUsernameIgnoreCase(nonExistingUserName)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.replace(nonExistingUserName, clientNewDto)).isInstanceOf(ResourceNotFoundException.class);
+        assertThatThrownBy(() -> userService.replace(clientNewDto, nonExistingUserName)).isInstanceOf(ResourceNotFoundException.class);
         verify(userRepositoryMock).findByUsernameIgnoreCase(nonExistingUserName);
     }
 

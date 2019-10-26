@@ -5,12 +5,13 @@ import com.endava.practice.roadmap.util.TestUsers;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,9 +25,12 @@ public class UserControllerTest extends BaseControllerTest {
     private String userName;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         dto = TestUsers.CLIENT_EXISTING.buildUserDto();
         userName = dto.getUsername();
+
+        when (authenticationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        doNothing().when(authenticationInterceptor).postHandle(any(), any(), any(), any());
     }
 
     @Test
@@ -81,7 +85,7 @@ public class UserControllerTest extends BaseControllerTest {
     void putUser202() throws Exception {
         final String requestJson = objectWriter.writeValueAsString(dto);
 
-        when (userServiceMock.replace(dto.getUsername(), dto)).thenReturn(dto);
+        when (userServiceMock.replace(dto, dto.getUsername())).thenReturn(dto);
 
         mockMvc.perform(
             put("/users/{username}", userName)
@@ -91,7 +95,7 @@ public class UserControllerTest extends BaseControllerTest {
             .andExpect(status().isAccepted())
             .andExpect(jsonPath("$.username", equalTo(dto.getUsername())));;
 
-        verify(userServiceMock).replace(userName, dto);
+        verify(userServiceMock).replace(dto, userName);
     }
 
     @Test

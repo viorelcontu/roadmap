@@ -152,13 +152,28 @@ The **dev** profile can be turned on and off manually by either:
 <a name="usage"><a>
 ## 4. Application Usage
 <a name="endpoints"><a>
-### 4.1 REST Endpoints
+Application will only serve authenticated and authorized users. The required data is pulled from database. 
+
+<a name="authentication"><a>
+### 4.1 Authentication (Error: HttpStatus 401 Unauthorized)
+To make calls you need, to include in request Header your api key. Consult the migration scripts located in 
+
+* `src/main/resources/db/migration` for the user tokens to identify yourself as that specific user. 
+
+example: `X-API-KEY: 12345678-1234-1234-1234-111111122211`
+
+<a name="authorization"><a>
+### 4.2 Authorization (Error: HttpStatus 403 Unauthenticated)
+Different api calls require different user roles. Please consult the migration scripts to select a user authorized to make a specific call. 
+
+<a name="endpoints"><a>
+### 4.3 REST Endpoints
 * `/users`  performs different CRUD operations on users
 * `/map`    maps the ids and symbols for crypto-currencies and normal currencies used by app    
 * `/quotes` retrieves market quotes for selected crypto-currencies
 
 <a name="swagger"><a>
-### 4.2 Swagger-UI
+### 4.3 Swagger-UI
 You can inspect REST endpoints with Swagger UI: [http://localhost:8080/api/swagger/](http://localhost:8080/api/swagger/)
 
 Following api specifications are available (select through combobox upper right):
@@ -171,7 +186,7 @@ swagger.custom-api=/api/roadmap-api.yml
 ```
 
 <a name="httpclients"><a>
-### 4.3 Alternative HTTP Clients
+### 4.4 Alternative HTTP Clients
 * ***src/test/resources/http/*** 
 
 contains http template files:
@@ -195,14 +210,18 @@ For testing purposes, a different sql file is loaded, located in
 - [X] Add exception handler for RestTemplate
 - [X] Generate custom API schema for Swagger
 - [X] Upgrade to a normal SQL DB instead of H2 and wire Flyway
-- [ ] Adjust API endpoints to require authentication tokens active for users
-- [ ] Add wiremock to enable integration tests for **/quotes** endpoints
+- [X] Adjust API endpoints to require authentication tokens active for users
+- [X] Implement authorization for different user roles (with Spring AOP)
+- [ ] Add DB Unit for integration tests
 - [ ] Add credits for users which will be used when they consume API
+- [ ] Add wiremock to enable integration tests for **/quotes** endpoints
 - [ ] Complete test coverage
 - [ ] Add Swagger Validator for endpoints that require message body
 - [ ] Add a sandbox profile that substitutes CoinMarketCap functionality with WireMock
 - [ ] Add caching mechanism for CoinMarketCap requests.  
 - [ ] Add a connection retry mechanism
+- [ ] Migrate to Spring Security
+- [ ] Migrate to PostgreSQL
 
 
 <a name="recommendation"><a>
@@ -247,6 +266,9 @@ getters and setters in code completion
 #### RestAssured 
 * https://github.com/rest-assured/rest-assured/wiki/Usage
 * https://www.testingexcellence.com/parse-json-response-rest-assured/
+
+#### Junit
+* https://www.baeldung.com/parameterized-tests-junit-5
 
 #### AssertJ:
 * https://joel-costigliola.github.io/assertj/assertj-core-quick-start.html

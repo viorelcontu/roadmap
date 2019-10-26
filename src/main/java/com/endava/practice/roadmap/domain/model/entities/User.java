@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor(access = PRIVATE)
-public class User implements ResourceWithId<Long> {
+public class User {
 
     @Column (name = "user_id")
     @Id

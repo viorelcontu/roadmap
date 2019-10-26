@@ -15,9 +15,6 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/users")
 public class UserController {
 
-    //TODO add token management for users
-    //TODO add api-credit management for users.
-
     private final UserService userService;
 
     @GetMapping("/{username}")
@@ -39,7 +36,7 @@ public class UserController {
     @PutMapping("/{username}")
     @ResponseStatus(ACCEPTED)
     public UserDto replace(@PathVariable("username") final String userName, @RequestBody @Valid final UserDto user) {
-        return userService.replace(userName, user);
+        return userService.replace(user, userName);
     }
 
     @DeleteMapping("/{username}")

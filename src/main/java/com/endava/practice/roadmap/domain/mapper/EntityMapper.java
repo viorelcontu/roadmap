@@ -24,6 +24,8 @@ public abstract class EntityMapper {
 
     @Mapping(target= "group", source ="role")
     public abstract User mapData(UserDto dto);
+
+    @Mapping(target= "group", source ="role")
     public abstract void updateUser (UserDto dto, @MappingTarget User entity);
 
     public Group mapData(Role role) {

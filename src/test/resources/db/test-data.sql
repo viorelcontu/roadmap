@@ -1,6 +1,6 @@
 INSERT INTO groups (group_id, group_name) VALUES (9, 'ADMIN');
 INSERT INTO groups (group_id, group_name) VALUES (7, 'MANAGER');
-INSERT INTO groups (group_id, group_name) VALUES (5, 'ACCOUNTANT');
+INSERT INTO groups (group_id, group_name) VALUES (5, 'AUDIT');
 INSERT INTO groups (group_id, group_name) VALUES (3, 'CLIENT');
 
 -- admin privileges: root, onboarding, accounting, audit, services
@@ -39,3 +39,6 @@ VALUES (3, 'bd365f12b18a4608946ad63d456bc361','lsky', 'Luke Skywalker', 'l.skywa
 -- Average Joe: User
 INSERT INTO users (user_id, token, user_name, nickname, email, group_id, credits, active)
 VALUES (4, '5f0909af46724824807d087730c7ec62', 'ajoe', 'Average Joe', 'average@users.net', 3, 0 ,1);
+
+INSERT INTO users (user_id, token, user_name, nickname, email, group_id, credits, active)
+VALUES (5, '213e9d1b143644b981b30a3348ae2332', 'inactive', 'Inactive Bruce', 'inactive@users.net', 3, 0 ,1);

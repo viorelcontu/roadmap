@@ -7,7 +7,7 @@ VALUES (1, 'c4d8135519dd4c45a7550d19f3ea402c', 'vcontu', 'Viorel Contu', 'viorel
 INSERT INTO users (user_id, token, user_name, nickname, email, group_id, credits, active)
 VALUES (2, '970f88cb29004530a4a8719ae882058c','asmith', 'Agent Smith', 'a.smith@mail.com', 7, 0, 1);
 
--- Luke Skywalker: Accountant
+-- Luke Skywalker: Auditor
 INSERT INTO users (user_id, token, user_name, nickname, email, group_id, credits, active)
 VALUES (3, 'bd365f12b18a4608946ad63d456bc361','lsky', 'Luke Skywalker', 'l.skywalker@starwars.org', 5, 0 , 1);
 

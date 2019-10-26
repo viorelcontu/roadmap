@@ -20,7 +20,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = PRIVATE)
-public class Group implements ResourceWithId<Integer> {
+public class Group {
 
     @Column(name = "group_id")
     @Id

@@ -13,15 +13,14 @@ import static java.util.stream.Stream.of;
 @RequiredArgsConstructor
 @Getter
 public enum Permission {
-    ROOT(8),
-    ONBOARDING (6),
-    ACCOUNTING (4),
-    AUDIT (2),
-    SERVICES (0);
+    OPERATOR_ADMIN(8),
+    CLIENT_ADMIN(6),
+    HISTORY(2),
+    SERVICES(0);
 
     final private Integer permissionId;
 
     public final static Map<Integer, Permission> idPermissionMap = unmodifiableMap(
             of(Permission.values())
-                    .collect(toMap(Permission::getPermissionId, identity())));
+            .collect(toMap(Permission::getPermissionId, identity())));
 }
