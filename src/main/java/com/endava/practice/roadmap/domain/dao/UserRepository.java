@@ -1,7 +1,7 @@
 package com.endava.practice.roadmap.domain.dao;
 
 import com.endava.practice.roadmap.domain.model.entities.User;
-import org.springframework.data.domain.Example;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsernameIgnoreCase(String userName);
 
     Integer deleteUserByUsernameIgnoreCase(String userName);
+
+    Optional<User> findByUsernameAndToken(String userName, UUID token);
 }

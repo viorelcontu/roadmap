@@ -1,7 +1,7 @@
 package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
-import com.endava.practice.roadmap.domain.service.UserService;
+import com.endava.practice.roadmap.domain.service.internalservice.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -4,6 +4,7 @@ import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
 import com.endava.practice.roadmap.util.Resources;
 import com.endava.practice.roadmap.util.TestUsers;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -11,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.endava.practice.roadmap.util.TestUsers.*;
+import static com.endava.practice.roadmap.util.TestUsers.CLIENT_2_NEW;
+import static com.endava.practice.roadmap.util.TestUsers.CLIENT_NEW;
+import static com.endava.practice.roadmap.util.TestUsers.CLIENT_NON_EXISTING;
 import static io.restassured.RestAssured.expect;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -23,11 +27,17 @@ import static io.restassured.mapper.ObjectMapperType.JACKSON_2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.util.UriComponentsBuilder.fromUri;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@TestPropertySource("classpath:application-congratulations-test.properties")
 public class UsersIntegrationTest {
 
     private static final String JSON_USERNAME = "username";
@@ -56,8 +66,6 @@ public class UsersIntegrationTest {
 
     @Test
     public void getAllUsersReturnsOK() {
-        //TODO improve
-
         given()
             .accept(JSON)
         .expect()
@@ -101,20 +109,20 @@ public class UsersIntegrationTest {
         final TestUsers source = CLIENT_NEW;
         final UserDto newUserDto = source.buildUserDto();
 
-        given()
+            given()
                 .contentType(JSON)
                 .accept(JSON)
                 .with()
                 .body(newUserDto, JACKSON_2)
-                .expect()
+            .expect()
                 .statusCode(CREATED.value())
-                .body(JSON_USERNAME, equalTo(source.getUsername()),
+                .body (JSON_USERNAME, equalTo(source.getUsername()),
                         JSON_FULL_NAME, equalTo(source.getNickname()),
                         JSON_EMAIL, equalTo(source.getEmail()),
                         JSON_ROLE, equalTo(source.getRole().name()),
                         JSON_CREDITS, equalTo(source.getCredits()),
                         JSON_ACTIVE, equalTo(source.getActive()))
-                .when()
+            .when()
                 .post(usersPath);
 
         final Integer presence = jdbcTemplate.queryForObject("SELECT count(*) FROM users WHERE user_name = ?", Integer.class, source.getUsername());
@@ -126,7 +134,6 @@ public class UsersIntegrationTest {
     @EnumSource(value = Resources.class,
             names = {"FILE_JSON_USER_MALFORMED", "FILE_JSON_USER_MISSING_NAME"})
     public void postUserJsonReturns400BadRequest(Resources resources) {
-    //TODO REVIEW
         given()
             .contentType(JSON)
             .accept(JSON)

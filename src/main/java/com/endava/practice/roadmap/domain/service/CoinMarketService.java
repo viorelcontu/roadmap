@@ -5,7 +5,7 @@ import com.endava.practice.roadmap.domain.model.enums.Currency;
 import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesData;
 import com.endava.practice.roadmap.domain.model.external.responses.quotes.ExternalQuotesResponse;
 import com.endava.practice.roadmap.domain.model.internal.responses.quotes.QuotesResponse;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,8 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
-import static com.endava.practice.roadmap.domain.model.exceptions.BadRequestException.ofWrongCrypto;
+import lombok.RequiredArgsConstructor;
+
 import static com.endava.practice.roadmap.domain.model.enums.CoinMarketApi.QUOTES;
+import static com.endava.practice.roadmap.domain.model.exceptions.BadRequestException.ofWrongCrypto;
 import static java.lang.String.valueOf;
 import static java.util.Optional.ofNullable;
 
@@ -56,7 +58,7 @@ public class CoinMarketService implements MarketService {
 
         ExternalQuotesData exQuotesData = ofNullable(response.getBody())
             .map(exQuotesResponse -> exQuotesResponse.getData().get(valueOf(id)))
-            .orElseThrow(() -> new HttpServerErrorException (HttpStatus.INTERNAL_SERVER_ERROR));
+            .orElseThrow(() -> new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
         return quotesMapper.mapExternalQuotesData(exQuotesData);
     }

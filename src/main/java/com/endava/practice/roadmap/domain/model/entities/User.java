@@ -7,6 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+
+import java.math.BigDecimal;
+import java.util.Set;
 import java.util.UUID;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -14,10 +17,9 @@ import static lombok.AccessLevel.PRIVATE;
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode (onlyExplicitlyIncluded = true)
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor(access = PRIVATE)
 public class User implements ResourceWithId<Long> {
 
@@ -35,6 +37,7 @@ public class User implements ResourceWithId<Long> {
     @Length(min = 4, max = 32)
     private String username;
 
+    @Column
     private String nickname;
 
     @Email
@@ -51,4 +54,12 @@ public class User implements ResourceWithId<Long> {
 
     @Column(nullable = false)
     private Boolean active;
+
+    @Column(nullable = false)
+    private BigDecimal balance;
+
+    @OneToMany
+    @Column
+    @JoinColumn(name = "client_id")
+    private Set<CreditHistory> creditHistory;
 }

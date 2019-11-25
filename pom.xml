@@ -35,7 +35,7 @@
         <!-- oracle and flyway db credentials  -->
         <db.user>ROADMAP</db.user>
         <db.password>roadmap1911</db.password>
-        <db.url>jdbc:oracle:thin:@//localhost:1521/orclpdb</db.url>
+        <db.url>jdbc:oracle:thin:@//localhost:1521/ORCLCDB.localdomain</db.url>
     </properties>
 
     <dependencies>

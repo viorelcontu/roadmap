@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.service;
+package com.endava.practice.roadmap.domain.service.internalservice;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.mapper.EntityMapper;
@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
-
-    //TODO use aspect or special annotation to make all userName params set to lowercase :)
 
     private final UserRepository repository;
     private final EntityMapper mapper;
@@ -61,4 +61,13 @@ public class UserService {
         if (!repository.existsByUsernameIgnoreCase(userName))
             throw ResourceNotFoundException.ofUserName(userName);
     }
+
+    public Optional<User> getUserByNameAndToken(String userName, UUID token){
+        return repository.findByUsernameAndToken(userName, token);
+    }
+
+    public User saveUser(User user){
+        return repository.save(user);
+    }
+
 }
