@@ -101,15 +101,16 @@ To execute the deployable jar:
 ### 3.1 Spring Profiles
 While **Maven profiles** configure the application during installation, the **Spring profiles** define how the application actually runs.    
 
-* ***dev*** profile: activates all sort of debug and tracing tools
-* ***h2*** profile: runs in memory DB. Configured to start automatically when installing with maven `mvn clean install`
-* ***oracle*** profile: connects to Oracle DB, overrides h2 profile. Configured to start automatically when installing with maven `mvn clean install -P oracle` 
+* ***dev*** profile: (Default: **active**) Activates all sort of debug and tracing tools
+* ***security*** profile: (Default: **active**) Activates authentication and authorization for most of endpoints. Use http header api key to authenticate.
+* ***h2*** profile: (Default: **active**) Runs in memory DB. Configured to start automatically when installing with maven `mvn clean install`
+* ***oracle*** profile: Connects to Oracle DB, overrides h2 profile. Configured to start automatically when installed with maven `mvn clean install -P oracle` 
 
 
 The spring profiles are configured using maven profiles. When running maven with a profile, it makes changes into
 * ***application.properties
 ```properties
-spring.profiles.active=dev
+spring.profiles.active=dev,security
 spring.profiles.include=@spring.database.profile@
 ```
 The maven resource plugin replaces the placeholder property *@spring.database.profile@* with either h2 or oracle depending on the installation arguments. 
@@ -130,7 +131,15 @@ H2 is activated for the application when compiled with maven default profile. Be
 
 
 #### 3.1.3 Oracle database
-Spring **oracle** profile will use the jdbc drivers installed and everything else configured by maven to connect to Oracle DB 
+Spring **oracle** profile will use the jdbc drivers installed and everything else configured by maven to connect to Oracle DB
+You need to create a user in your Oracle DB in order to be able to migrate the data. 
+Connect to sys user and issue the following commands:
+
+* `create user roadmap identified by password`
+* `grant create connection, create table, create view, create sequence to roadmap`
+* `grant unlimitted tablespace to roadmap`
+
+Consult Oracle reference manual for extra configuration.
 
 #### 3.1.4 Switching Spring profiles
 The spring **h2**/**oracle** profiles will be activated automatically depending how you compiled with maven.

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import static com.endava.practice.roadmap.domain.model.enums.Role.CLIENT;
 @Component
 @Aspect
 @RequiredArgsConstructor
+@Profile("security")
 public class AuthorizationAspect {
 
     private final SecurityService securityService;

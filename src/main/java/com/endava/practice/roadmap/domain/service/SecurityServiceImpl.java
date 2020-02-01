@@ -6,6 +6,7 @@ import com.endava.practice.roadmap.domain.model.enums.Permission;
 import com.endava.practice.roadmap.domain.model.exceptions.AuthenticationException;
 import com.endava.practice.roadmap.domain.model.exceptions.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import static java.util.UUID.fromString;
 
 @Service
 @RequiredArgsConstructor
+@Profile("security")
 public class SecurityServiceImpl implements SecurityService {
 
     private ThreadLocal<User> currentUser = new ThreadLocal<>();
