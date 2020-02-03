@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @RequiredArgsConstructor
 @Configuration
-@Profile("security")
+@Profile("!no-security")
 public class InterceptorConfig implements WebMvcConfigurer {
 
     private final AuthenticationInterceptor authenticationInterceptor;

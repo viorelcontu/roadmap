@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Profile("security")
+@Profile("!no-security")
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     public static final String AUTHENTICATION_HEADER = "X-API-KEY";

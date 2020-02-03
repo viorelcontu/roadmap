@@ -1,5 +1,5 @@
-# Practice Roadmap
-Copyright (C) Viorel Contu 2019.
+# Spring Framework & Hibernate Practice Roadmap
+Copyright (C) Viorel Contu 2020.
 
 This application source code can only be used for educational purposes. 
 
@@ -13,6 +13,8 @@ This application source code can only be used for educational purposes.
 3. [ Running ](#run)
     * [ Spring Profiles ](#spring)
 4. [ Usage ](#usage)
+    * [ Authentication ](#authentication)
+    * [ Authorization ](#authorization)
     * [ REST Endpoints ](#endpoints)
     * [ Swagger-UI ](#swagger)
     * [ Alternative Http Clients ](#httpclients)
@@ -102,7 +104,7 @@ To execute the deployable jar:
 While **Maven profiles** configure the application during installation, the **Spring profiles** define how the application actually runs.    
 
 * ***dev*** profile: (Default: **active**) Activates all sort of debug and tracing tools
-* ***security*** profile: (Default: **active**) Activates authentication and authorization for most of endpoints. Use http header api key to authenticate.
+* ***no-security*** profile: Disables authentication and authorization for most of endpoints.
 * ***h2*** profile: (Default: **active**) Runs in memory DB. Configured to start automatically when installing with maven `mvn clean install`
 * ***oracle*** profile: Connects to Oracle DB, overrides h2 profile. Configured to start automatically when installed with maven `mvn clean install -P oracle` 
 
@@ -110,7 +112,7 @@ While **Maven profiles** configure the application during installation, the **Sp
 The spring profiles are configured using maven profiles. When running maven with a profile, it makes changes into
 * ***application.properties
 ```properties
-spring.profiles.active=dev,security
+spring.profiles.active=dev
 spring.profiles.include=@spring.database.profile@
 ```
 The maven resource plugin replaces the placeholder property *@spring.database.profile@* with either h2 or oracle depending on the installation arguments. 

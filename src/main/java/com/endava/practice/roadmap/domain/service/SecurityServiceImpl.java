@@ -20,7 +20,7 @@ import static java.util.UUID.fromString;
 
 @Service
 @RequiredArgsConstructor
-@Profile("security")
+@Profile("!no-security")
 public class SecurityServiceImpl implements SecurityService {
 
     private ThreadLocal<User> currentUser = new ThreadLocal<>();

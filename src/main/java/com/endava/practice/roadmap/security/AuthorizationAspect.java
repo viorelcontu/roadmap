@@ -26,7 +26,7 @@ import static com.endava.practice.roadmap.domain.model.enums.Role.CLIENT;
 @Component
 @Aspect
 @RequiredArgsConstructor
-@Profile("security")
+@Profile("!no-security")
 public class AuthorizationAspect {
 
     private final SecurityService securityService;
