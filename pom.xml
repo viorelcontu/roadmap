@@ -207,7 +207,7 @@
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>com.endava.practice.roadmap.integration.**</exclude>
+                        <exclude>**/*IntegrationTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -290,14 +290,28 @@
                             </additionalClasspathElements>
                             <failIfNoTests>true</failIfNoTests>
                             <includes>
-                                <include>com.endava.practice.roadmap.integration.**</include>
+                                <include>**.*IntegrationTest</include>
                             </includes>
                         </configuration>
                         <executions>
                             <execution>
+                                <id>default</id>
+                                <configuration>
+                                    <excludes>
+                                        <exclude>com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>external</id>
+                                <configuration>
+                                    <skipTests>true</skipTests>
+                                    <includes>
+                                        <include>com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*</include>
+                                    </includes>
+                                </configuration>
                                 <goals>
                                     <goal>integration-test</goal>
-                                    <goal>verify</goal>
                                 </goals>
                             </execution>
                         </executions>

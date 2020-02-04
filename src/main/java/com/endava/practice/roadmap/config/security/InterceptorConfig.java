@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.security;
+package com.endava.practice.roadmap.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

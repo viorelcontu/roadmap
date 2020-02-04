@@ -16,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.endava.practice.roadmap.security.AuthenticationInterceptor.AUTHENTICATION_HEADER;
+import static com.endava.practice.roadmap.config.security.AuthenticationInterceptor.AUTHENTICATION_HEADER;
 import static com.endava.practice.roadmap.util.TestUsers.*;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;

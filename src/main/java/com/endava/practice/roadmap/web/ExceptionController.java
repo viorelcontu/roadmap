@@ -32,14 +32,14 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex, final HttpHeaders headers,
                                                                   final HttpStatus status, final WebRequest request) {
-        log.debug("Submitted a malformed json");
+        log.warn("Submitted a malformed json");
         return handleExceptionInternal(ex, apiMessage(BAD_REQUEST, ex), headers, BAD_REQUEST, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers,
                                                                   final HttpStatus status, final WebRequest request) {
-        log.debug("Submitted a JSON with unexpected property");
+        log.warn("Submitted a JSON with unexpected property");
         return handleExceptionInternal(ex, apiMessage(BAD_REQUEST, ex), headers, BAD_REQUEST, request);
     }
 

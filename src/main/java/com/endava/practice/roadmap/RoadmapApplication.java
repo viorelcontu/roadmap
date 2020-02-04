@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "com.endava.practice.roadmap.domain.service",
         "com.endava.practice.roadmap.domain.dao",
         "com.endava.practice.roadmap.domain.mapper",
-        "com.endava.practice.roadmap.security",
         "com.endava.practice.roadmap.web"
 })
 public class RoadmapApplication {

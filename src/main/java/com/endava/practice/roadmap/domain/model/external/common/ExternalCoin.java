@@ -1,5 +1,5 @@
 
-package com.endava.practice.roadmap.domain.model.external.responses.quotes;
+package com.endava.practice.roadmap.domain.model.external.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.EnumSet;
 import java.util.Map;
 
 @Data
-public class ExternalQuotesData {
+public class ExternalCoin {
 
     @JsonProperty ("id")
     private Integer externalId;
@@ -45,5 +45,5 @@ public class ExternalQuotesData {
     @JsonProperty("last_updated")
     private Instant lastUpdated;
 
-    private Map<String, ExternalQuotesDataPrice> quote;
+    private Map<String, ExternalCoinPriceQuote> quote;
 }

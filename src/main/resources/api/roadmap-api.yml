@@ -12,13 +12,13 @@ servers:
 security:
   - ApiKeyAuth: []
 paths:
-  /map/cryptocurrency:
+  /map/coins:
     get:
       tags:
         - Currency Map
       summary: Crypto-currency mappings
-      description: Fetches a list of crypto-currencies supported together with their ids and name.
-      operationId: getCryptoMapping
+      description: Fetches a list of crypto-currencies supported.
+      operationId: getCoinMapping
       responses:
         '200':
           description: OK
@@ -27,20 +27,20 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Currency"
+                  $ref: "#/components/schemas/Coin"
               examples:
                 first:
-                  $ref: '#/components/examples/CryptoMap'
+                  $ref: '#/components/examples/CoinMapExample'
         '401':
           $ref: '#/components/responses/AuthenticationFailed'
 
-  /map/fiatcurrency:
+  /map/currencies:
     get:
       tags:
         - Currency Map
-      summary: Fiat currencies mappings
-      description: Fetches a list of fiat currencies supported together with their ids and name.
-      operationId: getFiatMapping
+      summary: Currencies mappings
+      description: Fetches a list of fiat currencies supported for conversion.
+      operationId: getCurrencyMapping
       responses:
         '200':
           description: OK
@@ -52,49 +52,9 @@ paths:
                   $ref: '#/components/schemas/Currency'
               examples:
                 first:
-                  $ref: '#/components/examples/FiatMap'
+                  $ref: '#/components/examples/CurrencyMapExample'
         '401':
           $ref: '#/components/responses/AuthenticationFailed'
-
-  /quotes:
-    get:
-      tags:
-        - Market Quotes
-      summary: Market quotes by id
-      description: |
-        Obtain crypto-currency quotes by id query param. **This is an external request endpoint!**
-
-        It is necessary to configure application with CoinMarketCap security token. See **README.MD** for configuration.
-      operationId: getQuotesByIdQuery
-      parameters:
-        - name: id
-          in: query
-          description: Crypto-currency **id**. Obtained from `/map/cryptocurrency`
-          required: true
-          style: form
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          allowEmptyValue: false
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/QuotesResponse'
-              examples:
-                first:
-                  $ref: '#/components/examples/QuoteBTC'
-        '401':
-          $ref: '#/components/responses/AuthenticationFailed'
-        '403':
-          $ref: '#/components/responses/AuthorizationFailed'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   '/quotes/{symbol}':
     get:
@@ -121,10 +81,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuotesResponse'
+                $ref: '#/components/schemas/Coin'
               examples:
                 first:
-                  $ref: '#/components/examples/QuoteBTC'
+                  $ref: '#/components/examples/BTCQuoteExample'
         '401':
           $ref: '#/components/responses/AuthenticationFailed'
         '403':
@@ -338,70 +298,53 @@ components:
     Currency:
       title: Currency
       type: object
-      properties:
-        code:
-          type: string
-          minLength: 3
-        id:
-          type: integer
-        name:
-          type: string
-      additionalProperties: false
+      additionalProperties:
+        type: string
       example:
-        code: BTC
-        id: 1
-        name: Bitcoin
+        BTC: Bitcoin
 
-    QuotesResponse:
+    Coin:
       title: Crypto-currency details
       type: object
       properties:
-        code:
+        title:
           type: string
-          minLength: 3
-        id:
-          type: integer
-          minimum: 1
-        name:
+        symbol:
+          type: string
+        codeName:
           type: string
         worldRank:
           type: integer
-        lastUpdated:
-          type: string
-          format: 'date-time'
         quote:
           type: array
+          nullable: true
           items:
-            $ref: '#/components/schemas/QuotesPrice'
+            $ref: '#/components/schemas/CoinPriceQuote'
       additionalProperties: false
       example:
-        code: BTC
-        id: 1
-        name: Bitcoin
+        title: Bitcoin
+        symbol: BTC
+        codeName: bitcoin
         worldRank: 1
-        lastUpdated: '2019-07-11T02:17:31Z'
         quote:
           -
             code: USD
             id: 101
             price: 12030.1390711
             volume24h: 32511211106.084
-            percentChange1h: 0.701379
             percentChange24h: -6.84533
             percentChange7d: 2.3863
             marketCap: 214267146836.1703
 
-    QuotesPrice:
+    CoinPriceQuote:
       type: object
       title: Market price quote
       properties:
-        id:
-          type: integer
+        currency:
+          type: string
         price:
           type: number
         volume24h:
-          type: number
-        percentChange1h:
           type: number
         percentChange24h:
           type: number
@@ -409,6 +352,9 @@ components:
           type: number
         marketCap:
           type: number
+        lastUpdated:
+          type: string
+          format: 'date-time'
       additionalProperties: false
 
     User:
@@ -469,54 +415,47 @@ components:
 
 
   examples:
-    CryptoMap:
-      summary: "crypto-currency mapping"
+    CoinMapExample:
+      summary: "crypto-coin mapping"
       value: |
         [
           {
-            "code": "BTC",
-            "id": 1,
-            "name": "Bitcoin"
+            "title": "Bitcoin",
+            "symbol": "BTC",
+            "codeName": "bitcoin",
+            "worldRank": 1
           },
           {
-            "code": "ETH",
-            "id": 2,
-            "name": "Ethereum"
-        ]
-    FiatMap:
-      summary: "fiat currency mapping"
-      value: |
-        [
-          {
-            "code": "USD",
-            "id": 101,
-            "name": "United States Dollar"
-          },
-          {
-            "code": "EUR",
-            "id": 102,
-            "name": "Euro"
+            "title": "Ethereum",
+            "symbol": "ETH",
+            "codeName": "ethereum",
+            "worldRank": 2
           }
         ]
-    QuoteBTC:
+    CurrencyMapExample:
+      summary: "fiat currency mapping"
+      value: |
+        {
+          "USD" : "United States Dollar"
+          "RUB" : "Russian Ruble"
+        }
+    BTCQuoteExample:
       summary: "BTC with USD quoting"
       value: |
         {
-          "code": "BTC",
-          "id": 1,
-          "name": "Bitcoin",
+          "title": "Bitcoin",
+          "symbol": "BTC",
+          "codeName": "bitcoin"
           "worldRank": 1,
-          "lastUpdated": "2019-07-11T02:17:31Z",
           "quote": [
             {
-              "code": "USD",
-              "id": 101,
+              "currency": "USD",
               "price": 12030.1390711,
               "volume24h": 32511211106.084,
-              "percentChange1h": 0.701379,
               "percentChange24h": -6.84533,
               "percentChange7d": 2.3863,
-              "marketCap": 214267146836.1703
+              "marketCap": 214267146836.1703,
+              "lastUpdated": "2019-07-11T02:17:31Z"
             }
           ]
         }
@@ -525,11 +464,19 @@ components:
       value: |
         [
           {
-            "id": 1,
-            "name": "John Doe"
+            "username": "aab",
+            "nickname": "Luke Skywalker",
+            "email": "luke@starwars.org",
+            "role": "AUDIT",
+            "credits": 0,
+            "active": true
           },
           {
-            "id": 2,
-            "name": "Bill White"
+            "username": "bbc",
+            "nickname": "Average Joe",
+            "email": "mail@users.net",
+            "role": "CLIENT",
+            "credits": 0,
+            "active": true
           }
         ]

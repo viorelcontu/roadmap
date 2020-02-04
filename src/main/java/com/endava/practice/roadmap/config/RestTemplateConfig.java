@@ -35,7 +35,7 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate coinMarketRestClient (RestTemplateBuilder builder) {
         return builder
-                .additionalInterceptors(new HeaderApiTokenInterceptor())
+                .additionalInterceptors(new HeaderApiTokenInterceptor(), new RequestLoggingInterceptor())
                 .uriTemplateHandler(new DefaultUriBuilderFactory(host))
                 .errorHandler(new ErrorResponseHandler())
                 .build();
@@ -45,7 +45,7 @@ public class RestTemplateConfig {
     public static class ErrorResponseHandler extends DefaultResponseErrorHandler {
         @Override
         public void handleError(ClientHttpResponse response) throws IOException {
-            log.debug("CoinMarketCap Exception, code {}, status {}", response.getStatusCode(), response.getStatusText());
+            log.error("CoinMarketCap Exception, code {}, status {}", response.getStatusCode(), response.getStatusText());
 
             final String message = response.getStatusCode().equals(UNAUTHORIZED) ?
                     "Wrong or missing Coin Market Token" : "Unknown internal error";
@@ -66,5 +66,19 @@ public class RestTemplateConfig {
 
             return execution.execute(request, body);
         }
+    }
+
+    @Slf4j
+    private static class RequestLoggingInterceptor implements ClientHttpRequestInterceptor {
+
+        @Override
+        public ClientHttpResponse intercept(
+                HttpRequest request, byte[] body,
+                ClientHttpRequestExecution execution) throws IOException {
+
+            log.info("REST call: Method = {}, URI = {}", request.getMethod(), request.getURI());
+            return execution.execute(request, body);
+        }
+
     }
 }

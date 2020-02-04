@@ -1,5 +1,5 @@
 
-package com.endava.practice.roadmap.domain.model.external.responses;
+package com.endava.practice.roadmap.domain.model.external.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

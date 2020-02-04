@@ -19,7 +19,7 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
 @Import(TransactionLoggingConfig.class)
-public class UserRepositoryTest {
+public class UserRepositoryIntegrationTest {
 
     @Autowired
     private UserRepository userDao;

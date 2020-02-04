@@ -1,13 +1,17 @@
 
-package com.endava.practice.roadmap.domain.model.external.responses.quotes;
+package com.endava.practice.roadmap.domain.model.external.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
-@Data
-public class ExternalQuotesDataPrice {
+@Getter
+@Setter
+public class ExternalCoinPriceQuote {
 
     private Double price;
 
@@ -28,5 +32,4 @@ public class ExternalQuotesDataPrice {
 
     @JsonProperty("last_updated")
     private Instant lastUpdated;
-
 }

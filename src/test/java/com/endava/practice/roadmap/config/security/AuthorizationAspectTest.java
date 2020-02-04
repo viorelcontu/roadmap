@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.security;
+package com.endava.practice.roadmap.config.security;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.model.annotations.RequirePermission;

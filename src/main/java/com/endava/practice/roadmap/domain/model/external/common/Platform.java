@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.model.external.responses.quotes;
+package com.endava.practice.roadmap.domain.model.external.common;
 
 import lombok.Data;
 
