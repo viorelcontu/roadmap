@@ -5,6 +5,7 @@ import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.domain.model.enums.Permission;
 import com.endava.practice.roadmap.domain.model.exceptions.AuthenticationException;
 import com.endava.practice.roadmap.domain.model.exceptions.ForbiddenException;
+import com.endava.practice.roadmap.domain.security.SecurityServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

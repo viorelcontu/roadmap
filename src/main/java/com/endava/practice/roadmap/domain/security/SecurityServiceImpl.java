@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.service;
+package com.endava.practice.roadmap.domain.security;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.model.entities.User;
@@ -22,6 +22,7 @@ import static java.util.UUID.fromString;
 @RequiredArgsConstructor
 @Profile("!no-security")
 public class SecurityServiceImpl implements SecurityService {
+    //TODO implement Logging for different security scenarios
 
     private ThreadLocal<User> currentUser = new ThreadLocal<>();
     private ThreadLocal<Set<Permission>> currentUserPermissions = new ThreadLocal<>();

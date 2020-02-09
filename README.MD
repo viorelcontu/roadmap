@@ -223,13 +223,14 @@ For testing purposes, a different sql file is loaded, located in
 - [X] Upgrade to a normal SQL DB instead of H2 and wire Flyway
 - [X] Adjust API endpoints to require authentication tokens active for users
 - [X] Implement authorization for different user roles (with Spring AOP)
+- [ ] Add caching mechanism for CoinMarketCap requests.  
 - [ ] Add DB Unit for integration tests
+- [ ] Add Zipkin for log tracing
 - [ ] Add credits for users which will be used when they consume API
 - [ ] Add wiremock to enable integration tests for **/quotes** endpoints
 - [ ] Complete test coverage
 - [ ] Add Swagger Validator for endpoints that require message body
 - [ ] Add a sandbox profile that substitutes CoinMarketCap functionality with WireMock
-- [ ] Add caching mechanism for CoinMarketCap requests.  
 - [ ] Add a connection retry mechanism
 - [ ] Migrate to Spring Security
 - [ ] Migrate to PostgreSQL

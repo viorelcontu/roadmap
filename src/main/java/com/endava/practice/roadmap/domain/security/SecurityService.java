@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.service;
+package com.endava.practice.roadmap.domain.security;
 
 import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.domain.model.enums.Permission;

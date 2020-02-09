@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.config.security;
+package com.endava.practice.roadmap.domain.security;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.model.annotations.RequirePermission;
@@ -7,7 +7,7 @@ import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.domain.model.enums.Permission;
 import com.endava.practice.roadmap.domain.model.enums.Role;
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
-import com.endava.practice.roadmap.domain.service.SecurityService;
+import com.endava.practice.roadmap.domain.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

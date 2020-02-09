@@ -1,11 +1,12 @@
 package com.endava.practice.roadmap.config.security;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
+import com.endava.practice.roadmap.domain.security.AuthorizationAspect;
 import com.endava.practice.roadmap.domain.model.annotations.RequirePermission;
 import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.domain.model.enums.Permission;
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
-import com.endava.practice.roadmap.domain.service.SecurityService;
+import com.endava.practice.roadmap.domain.security.SecurityService;
 import com.endava.practice.roadmap.util.TestUsers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

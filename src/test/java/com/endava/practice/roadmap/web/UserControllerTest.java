@@ -30,6 +30,7 @@ public class UserControllerTest extends BaseControllerTest {
         userName = dto.getUsername();
 
         when (authenticationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when (loggingInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         doNothing().when(authenticationInterceptor).postHandle(any(), any(), any(), any());
     }
 
