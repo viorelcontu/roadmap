@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
@@ -25,7 +26,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         "percentChange7d",
         "marketCap",
         "lastUpdated"})
-public class CoinPriceQuote {
+public class CoinPriceQuote implements Serializable {
 
     private Currency currency;
 

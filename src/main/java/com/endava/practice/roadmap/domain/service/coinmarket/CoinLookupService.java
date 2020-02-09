@@ -1,13 +1,16 @@
 package com.endava.practice.roadmap.domain.service.coinmarket;
 
 import com.endava.practice.roadmap.domain.mapper.CoinMapper;
+import com.endava.practice.roadmap.domain.model.exceptions.BadRequestException;
 import com.endava.practice.roadmap.domain.model.exceptions.ResourceNotFoundException;
 import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.endava.practice.roadmap.domain.model.internal.Coin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -22,6 +25,9 @@ public class CoinLookupService {
 
     private final CoinMapper coinMapper;
 
+    @Resource
+    private CoinLookupService coinLookupService;
+
     @Value("${crypto.listing.limit}")
     private int listingLimit;
 
@@ -34,7 +40,7 @@ public class CoinLookupService {
         return findCoin(coin -> coin.getCodeName().equals(codeName));
     }
 
-    //TODO this should be cacheable
+    @Cacheable("coins")
     public List<Coin> getCoinListing() {
         final List<ExternalCoin> externalCoinData = coinMarketClient.requestCoinListing(listingLimit);
 
@@ -45,10 +51,10 @@ public class CoinLookupService {
     }
 
     private Coin findCoin(Predicate<Coin> predicate) {
-        return getCoinListing()
+        return coinLookupService.getCoinListing()
                 .stream()
                 .filter(predicate)
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException ("crypto currency not found")); //TODO review this error message
+                .orElseThrow(BadRequestException::ofWrongCrypto);
     }
 }

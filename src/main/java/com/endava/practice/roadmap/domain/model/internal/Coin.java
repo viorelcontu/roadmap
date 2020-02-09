@@ -8,7 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
@@ -16,6 +18,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @EqualsAndHashCode(of = "symbol")
 @Getter
 @Setter
+@ToString (includeFieldNames = false, of = "symbol")
 @JsonPropertyOrder ({
         "title",
         "symbol",
@@ -23,7 +26,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         "worldRank",
         "quote"})
 @JsonInclude(NON_NULL)
-public class Coin {
+public class Coin implements Serializable {
 
     private String title;
 

@@ -6,6 +6,8 @@ import com.endava.practice.roadmap.domain.model.enums.Currency;
 import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.endava.practice.roadmap.domain.model.internal.Coin;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
@@ -32,6 +34,7 @@ public class CoinMarketService implements MarketService {
 
     @Override
     @RequirePermission(SERVICES)
+    @Cacheable(value = "quotes", key = "#symbol")
     public Coin getQuotes(String symbol) {
         final Coin coin = coinLookupService.findBySymbol(symbol);
         final ExternalCoin externalCoin = coinMarketClient.requestMarketQuotes(coin.getExternalId());

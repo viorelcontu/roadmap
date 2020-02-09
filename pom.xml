@@ -102,6 +102,25 @@
             <version>${springfox-swagger.version}</version>
         </dependency>
 
+        <!-- Caching   -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+<!--            <version>3.6.2</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+<!--            <version>1.1.0</version>-->
+        </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -298,7 +317,9 @@
                                 <id>default</id>
                                 <configuration>
                                     <excludes>
-                                        <exclude>com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*</exclude>
+                                        <exclude>
+                                            com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*
+                                        </exclude>
                                     </excludes>
                                 </configuration>
                             </execution>
@@ -307,7 +328,9 @@
                                 <configuration>
                                     <skipTests>true</skipTests>
                                     <includes>
-                                        <include>com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*</include>
+                                        <include>
+                                            com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*
+                                        </include>
                                     </includes>
                                 </configuration>
                                 <goals>

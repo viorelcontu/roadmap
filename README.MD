@@ -223,7 +223,7 @@ For testing purposes, a different sql file is loaded, located in
 - [X] Upgrade to a normal SQL DB instead of H2 and wire Flyway
 - [X] Adjust API endpoints to require authentication tokens active for users
 - [X] Implement authorization for different user roles (with Spring AOP)
-- [ ] Add caching mechanism for CoinMarketCap requests.  
+- [X] Add caching mechanism for CoinMarketCap requests.  
 - [ ] Add DB Unit for integration tests
 - [ ] Add Zipkin for log tracing
 - [ ] Add credits for users which will be used when they consume API
