@@ -1,4 +1,4 @@
-GET http://localhost:8080/actuator/autoconfig
+GET http://localhost:8080/actuator/health
 Accept: application/json
 ###
 

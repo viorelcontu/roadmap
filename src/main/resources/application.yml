@@ -1,0 +1,33 @@
+spring:
+  profiles:
+    include: @spring.database.profile@
+
+  jackson:
+    serialization.indent-output: true
+    deserialization.fail-on-unknown-properties: true
+
+  cache:
+    jcache.config: 'classpath:ehcache.xml'
+
+  jpa:
+    properties:
+      hibernate.format_sql: true
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type.descriptor.sql.BasicBinder: TRACE
+      springframework.transaction.interceptor: TRACE
+
+
+management:
+  endpoints.web.exposure.include: '*'
+  endpoint.shutdown.enabled: true
+
+
+springfox.documentation.swagger.v2.path: '/api/roadmap-auto-api'
+
+swagger.custom-api: '/api/roadmap-api.yml'

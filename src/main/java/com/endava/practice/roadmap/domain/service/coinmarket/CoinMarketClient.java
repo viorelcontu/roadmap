@@ -28,7 +28,6 @@ public class CoinMarketClient {
     private final RestTemplate coinMarketRestClient;
 
     public ExternalCoin requestMarketQuotes(final int externalId) {
-
         final String requestUrl = QUOTES.buildUri("id={id}").expand(externalId).encode().toString();
 
         ResponseEntity<ExternalQuotesResponse> response = coinMarketRestClient

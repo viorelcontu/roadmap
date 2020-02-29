@@ -6,6 +6,8 @@ import com.endava.practice.roadmap.domain.model.exceptions.ResourceNotFoundExcep
 import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.endava.practice.roadmap.domain.model.internal.Coin;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class CoinLookupService {
 
     private final CoinMapper coinMapper;
 
-    @Resource
+    @Setter(onMethod_ = {@Autowired})
     private CoinLookupService coinLookupService;
 
     @Value("${crypto.listing.limit}")

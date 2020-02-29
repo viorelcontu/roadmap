@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 
 @TestConfiguration
+@PropertySource("classpath:roadmap.properties")
 public class TestConfig {
 
     @Bean ObjectWriter objectWriter() {

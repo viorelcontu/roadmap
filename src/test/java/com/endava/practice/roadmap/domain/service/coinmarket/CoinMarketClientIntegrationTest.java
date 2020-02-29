@@ -6,17 +6,13 @@ import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
 
-@ExtendWith(SpringExtension.class)
-@TestPropertySource({"classpath:application.properties","classpath:api-token.properties"})
-@ContextConfiguration(classes = {TestConfig.class, RestTemplateConfig.class, CoinMarketClient.class})
+@SpringJUnitConfig({TestConfig.class, RestTemplateConfig.class, CoinMarketClient.class})
 class CoinMarketClientIntegrationTest {
 
     @Autowired

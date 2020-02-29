@@ -7,20 +7,21 @@ import com.endava.practice.roadmap.domain.model.enums.Currency;
 import com.endava.practice.roadmap.domain.model.internal.Coin;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
 import java.util.Map;
 
-@ExtendWith(SpringExtension.class)
-@TestPropertySource({"classpath:application.properties","classpath:api-token.properties"})
-@ContextConfiguration(classes = {TestConfig.class, RestTemplateConfig.class, CoinMarketClient.class,
-        CoinMapperImpl.class, CoinLookupService.class, CoinMarketService.class})
+@SpringJUnitConfig({TestConfig.class,
+        RestTemplateConfig.class,
+        CoinMarketClient.class,
+        CoinMapperImpl.class,
+        CoinLookupService.class,
+        CoinMarketService.class})
+@Slf4j
 class CoinMarketServiceIntegrationTest {
 
     @Autowired
@@ -32,28 +33,27 @@ class CoinMarketServiceIntegrationTest {
     @Test
     void getQuotes() {
         final Coin btc = coinMarketService.getQuotes("BTC");
-        System.out.println("[QUOTE Response] " + btc);
+        log.info("[QUOTE Response] {}", btc);
         printSerializedObject(btc);
     }
 
     @Test
     void getListing() {
         final List<Coin> listing = coinMarketService.getListing();
-        System.out.println("[LISTING Response] " + listing);
+        log.info("[LISTING Response] {}", listing);
         printSerializedObject(listing);
     }
 
     @Test
     void getCurrencies() {
         final Map<Currency, String> currencies = coinMarketService.getCurrencies();
-        System.out.println("[CURRENCIES Response] " + currencies);
+        log.info("[CURRENCIES Response] {}", currencies);
         printSerializedObject(currencies);
     }
 
     @SneakyThrows
     private void printSerializedObject (Object object) {
         final String value = objectWriter.writeValueAsString(object);
-        System.out.println("application/json:");
-        System.out.println(value);
+        log.info("Serialized object: \n{}", value);
     }
 }

@@ -1,0 +1,40 @@
+spring:
+  jackson:
+    serialization.indent-output: true
+    deserialization.fail-on-unknown-properties: true
+
+  cache.type: none
+
+  jpa:
+    properties:
+      hibernate.format_sql: true
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    hibernate.ddl-auto: create
+
+  datasource:
+    platform: h2
+    driver-class-name: org.h2.Driver
+    url: 'jdbc:h2:mem:testdb;Mode=Oracle;DB_CLOSE_DELAY=-1'
+    username: sa
+    password: sa
+    data: 'classpath:db/test-data.sql'
+    continue-on-error: true
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type.descriptor.sql.BasicBinder: TRACE
+      springframework.transaction.interceptor: TRACE
+
+
+management:
+  endpoints.web.exposure.include: '*'
+  endpoint.shutdown.enabled: true
+
+
+springfox.documentation.swagger.v2.path: '/api/roadmap-auto-api'
+
+swagger.custom-api: '/api/roadmap-api.yml'
