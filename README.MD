@@ -103,29 +103,26 @@ To execute the deployable jar:
 ### 3.1 Spring Profiles
 While **Maven profiles** configure the application during installation, the **Spring profiles** define how the application actually runs.    
 
-* ***dev*** profile: (Default: **active**) Activates all sort of debug and tracing tools
 * ***no-security*** profile: Disables authentication and authorization for most of endpoints.
 * ***h2*** profile: (Default: **active**) Runs in memory DB. Configured to start automatically when installing with maven `mvn clean install`
 * ***oracle*** profile: Connects to Oracle DB, overrides h2 profile. Configured to start automatically when installed with maven `mvn clean install -P oracle` 
 
 
 The spring profiles are configured using maven profiles. When running maven with a profile, it makes changes into
-* ***application.properties
+* ***application.yml
 ```properties
-spring.profiles.active=dev
-spring.profiles.include=@spring.database.profile@
+spring:
+  profiles:
+    include: @spring.database.profile@
 ```
 The maven resource plugin replaces the placeholder property *@spring.database.profile@* with either h2 or oracle depending on the installation arguments. 
 
 
-#### 3.1.1 Spring dev profile
-The spring **dev** profile activates all sort of debugs and traces:
+#### 3.1.1 Default spring profile
+The application now includes all sort of properties configured for debugging and learning:
 * hibernate SQL queries
 * transaction management messages  
 * swagger ui endpoint
-
-**dev** is activated by default in: 
-* ***src/main/resources/application.properties***
 
 
 #### 3.1.2 Default H2 in memory database
