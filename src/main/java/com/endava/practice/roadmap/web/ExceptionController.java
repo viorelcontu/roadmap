@@ -1,7 +1,5 @@
 package com.endava.practice.roadmap.web;
 
-import com.endava.practice.roadmap.domain.model.exceptions.BadRequestException;
-import com.endava.practice.roadmap.domain.model.exceptions.ResourceNotFoundException;
 import com.endava.practice.roadmap.domain.model.internal.ApiStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -17,8 +15,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @ControllerAdvice

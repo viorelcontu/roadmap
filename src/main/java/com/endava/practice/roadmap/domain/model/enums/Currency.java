@@ -2,8 +2,6 @@ package com.endava.practice.roadmap.domain.model.enums;
 
 import com.endava.practice.roadmap.domain.model.exceptions.BadRequestException;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

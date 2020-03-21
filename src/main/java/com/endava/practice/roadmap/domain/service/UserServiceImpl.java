@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.endava.practice.roadmap.domain.model.enums.Permission.CLIENT_ADMIN;
-import static com.endava.practice.roadmap.domain.model.enums.Permission.OPERATOR_ADMIN;
 import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor

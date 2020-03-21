@@ -5,25 +5,28 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.2.RELEASE</version>
+        <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.endava.practice</groupId>
     <artifactId>roadmap</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
     <name>roadmap</name>
     <description>Java Road Map Practice</description>
 
     <properties>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <java.version>1.8</java.version>
         <lombok.version>1.18.4</lombok.version>
-        <mapstruct.version>1.3.0.Final</mapstruct.version>
+        <mapstruct.version>1.3.1.Final</mapstruct.version>
         <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
         <!-- maven plugins -->
-        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
         <maven-help-plugin.version>3.2.0</maven-help-plugin.version>
 
@@ -37,10 +40,6 @@
         <spring.database.profile>h2</spring.database.profile>
         <h2.scope>runtime</h2.scope>
 
-        <!-- oracle and flyway db credentials  -->
-        <db.user>ROADMAP</db.user>
-        <db.password>roadmap1911</db.password>
-        <db.url>jdbc:oracle:thin:@//localhost:1521/orclpdb</db.url>
     </properties>
 
     <dependencies>
@@ -111,13 +110,11 @@
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-<!--            <version>3.6.2</version>-->
         </dependency>
 
         <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
-<!--            <version>1.1.0</version>-->
         </dependency>
 
         <!-- Testing -->
@@ -125,12 +122,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -198,9 +189,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <!-- update compiler plugin dependency on ASM for Java 11 compatibility -->
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>6.2</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <release>${java.version}</release>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -225,6 +223,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
+<!--                    keep this for future, just in case-->
+<!--                    <argLine>-->
+<!--                        &#45;&#45;illegal-access=permit-->
+<!--                    </argLine>-->
                     <excludes>
                         <exclude>**/*IntegrationTest.java</exclude>
                     </excludes>
@@ -253,10 +255,17 @@
         <profile>
             <id>oracle</id>
             <properties>
+<!--                Override H2 database with Oracle -->
                 <spring.database.profile>oracle</spring.database.profile>
                 <h2.scope>test</h2.scope>
+
                 <flyway.version>6.0.3</flyway.version>
                 <ojdbc8.version>19.3.0.0</ojdbc8.version>
+
+                <!-- oracle and flyway db credentials  -->
+                <db.user>roadmap</db.user>
+                <db.password>roadpass</db.password>
+                <db.url>jdbc:oracle:thin:@//localhost:1521/orclpdb</db.url>
             </properties>
             <dependencies>
                 <dependency>
@@ -290,6 +299,10 @@
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${maven-failsafe-plugin.version}</version>
                         <configuration>
+                            <!--                    keep this for future, just in case-->
+<!--                            <argLine>-->
+<!--                                &#45;&#45;illegal-access=permit-->
+<!--                            </argLine>-->
                             <additionalClasspathElements>
                                 <additionalClasspathElement>
                                     src/test/resources/json
@@ -314,7 +327,7 @@
                             <execution>
                                 <id>external</id>
                                 <configuration>
-                                    <skipTests>true</skipTests>
+                                    <skipITs>true</skipITs>
                                     <includes>
                                         <include>
                                             com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*

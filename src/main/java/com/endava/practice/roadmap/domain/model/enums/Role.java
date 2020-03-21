@@ -11,5 +11,5 @@ public enum Role {
     CLIENT (3);
 
     @Getter
-    final private Integer groupId;
+    private final Integer groupId;
 }

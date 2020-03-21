@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,12 +19,12 @@ public class MapController {
     private final MarketService marketService;
 
     @GetMapping("/coins")
-    List<Coin> getCoinMapping() {
+    public List<Coin> getCoinMapping() {
         return marketService.getListing();
     }
 
     @GetMapping("/currencies")
-    Map<Currency, String> getCurrencyMapping () {
+    public Map<Currency, String> getCurrencyMapping() {
         return marketService.getCurrencies();
     }
 }

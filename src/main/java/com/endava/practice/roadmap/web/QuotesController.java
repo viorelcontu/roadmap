@@ -20,7 +20,7 @@ public class QuotesController {
     // 2. multiple quotes retrieval in a single request
 
     @GetMapping ("/{symbol}")
-    Coin getQuotesBySymbol(@PathVariable String symbol) {
+    public Coin getQuotesBySymbol(@PathVariable String symbol) {
         return marketService.getQuotes(symbol);
     }
 }

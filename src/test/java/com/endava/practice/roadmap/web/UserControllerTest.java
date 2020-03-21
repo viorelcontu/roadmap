@@ -5,16 +5,25 @@ import com.endava.practice.roadmap.util.TestUsers;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerTest extends BaseControllerTest {
 
@@ -58,7 +67,7 @@ public class UserControllerTest extends BaseControllerTest {
         mockMvc.perform(get("/users/{username}", userName))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().contentType(JSON_UTF8))
+            .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.username").value(dto.getUsername()));
 
         verify(userServiceMock).findOne(userName);
@@ -72,11 +81,11 @@ public class UserControllerTest extends BaseControllerTest {
 
         mockMvc.perform(
             post("/users")
-                .contentType(JSON_UTF8)
+                .contentType(APPLICATION_JSON)
                 .content(requestJson))
             .andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(content().contentType(JSON_UTF8))
+            .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.username", equalTo(dto.getUsername())));
 
         verify(userServiceMock).create(dto);
@@ -90,7 +99,8 @@ public class UserControllerTest extends BaseControllerTest {
 
         mockMvc.perform(
             put("/users/{username}", userName)
-                .contentType(JSON_UTF8)
+                .contentType(APPLICATION_JSON
+                )
                 .content(requestJson))
             .andDo(print())
             .andExpect(status().isAccepted())

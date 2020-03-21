@@ -4,7 +4,6 @@ import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.endava.practice.roadmap.domain.model.external.listings.ExternalListingResponse;
 import com.endava.practice.roadmap.domain.model.external.quotes.ExternalQuotesResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -51,7 +50,7 @@ public class CoinMarketClient {
     }
 
     private MultiValueMap<String, String> buildQueryParams(int limit) {
-        final MultiValueMap<String, String> queryMap = new LinkedMultiValueMap<>();
+        final var queryMap = new LinkedMultiValueMap<String, String>();
         queryMap.add("limit",Integer.toString(limit));
         queryMap.add("sort", "market_cap");
         queryMap.add("sort_dir", "desc");

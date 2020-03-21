@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class ApiStatus {
 
-    final private String status;
-    final private String message;
-    final private String developerMessage;
+    private final String status;
+    private final String message;
+    private final String developerMessage;
 
     @Override
     public String toString() {

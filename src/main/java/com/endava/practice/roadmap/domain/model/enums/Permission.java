@@ -18,9 +18,9 @@ public enum Permission {
     HISTORY(2),
     SERVICES(0);
 
-    final private Integer permissionId;
+    private final Integer permissionId;
 
-    public final static Map<Integer, Permission> idPermissionMap = unmodifiableMap(
+    public static final Map<Integer, Permission> idPermissionMap = unmodifiableMap(
             of(Permission.values())
             .collect(toMap(Permission::getPermissionId, identity())));
 }

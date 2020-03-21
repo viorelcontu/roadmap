@@ -32,9 +32,9 @@ public abstract class EntityMapper {
         Integer groupId = role.getGroupId();
         Optional<Group> optional = groupRepository.findById(groupId);
         return  optional.orElseThrow(() -> new BadRequestException ("Role does not exist"));
-    };
+    }
 
     public Role mapData(Group group) {
         return group.getRole();
-    };
+    }
 }

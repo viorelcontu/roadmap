@@ -6,21 +6,14 @@ import com.endava.practice.roadmap.domain.model.enums.Currency;
 import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.endava.practice.roadmap.domain.model.internal.Coin;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Cache;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.endava.practice.roadmap.domain.model.enums.Currency.currencyStringMap;
 import static com.endava.practice.roadmap.domain.model.enums.Permission.SERVICES;
-import static java.lang.String.valueOf;
-import static java.util.function.Function.identity;
 
 @RequiredArgsConstructor
 @Service
