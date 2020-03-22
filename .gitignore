@@ -1,6 +1,7 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
+/config/roadmap.properties
 /src/test/resources/roadmap.properties
 
 ### STS ###

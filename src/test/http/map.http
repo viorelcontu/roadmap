@@ -1,11 +1,15 @@
-GET /map/cryptocurrency
+GET /map/coins
 Host: localhost:8080
 Accept: application/json
+Content-Type: application/json
+X-API-KEY: 5f0909af-4672-4824-807d-087730c7ec62
 
 ###
 
-GET /map/fiatcurrency
+GET /map/currencies
 Host: localhost:8080
 Accept: application/json
+Content-Type: application/json
+X-API-KEY: 5f0909af-4672-4824-807d-087730c7ec62
 
 ###

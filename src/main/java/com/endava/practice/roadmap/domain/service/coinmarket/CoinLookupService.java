@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class CoinLookupService {
         return externalCoinData.stream()
                 .map(coinMapper::mapCoinListing)
                 .sorted(comparing(Coin::getWorldRank))
-                .collect(toList());
+                .collect(toUnmodifiableList());
     }
 
     private Coin findCoin(Predicate<Coin> predicate) {

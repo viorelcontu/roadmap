@@ -4,17 +4,20 @@ import com.endava.practice.roadmap.domain.model.internal.UserDto;
 import com.endava.practice.roadmap.util.Resources;
 import com.endava.practice.roadmap.util.TestUsers;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Assume;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.stream.Stream;
 
 import static com.endava.practice.roadmap.util.TestUsers.*;
 import static com.endava.practice.roadmap.web.interceptors.AuthenticationInterceptor.AUTHENTICATION_HEADER;
@@ -33,7 +36,8 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class UsersIntegrationTest {
-
+    //TODO write a test that verifies authorization, to see if the AuthorizationAspectworks
+    // Existing authentication tests works without aspect, authentication tests will not fail
     private static final String JSON_USERNAME = "username";
     private static final String JSON_FULL_NAME = "nickname";
     private static final String JSON_EMAIL = "email";
@@ -46,13 +50,17 @@ public class UsersIntegrationTest {
     final private JdbcTemplate jdbcTemplate;
 
     public UsersIntegrationTest(@Autowired JdbcTemplate jdbcTemplate,
+                                @Autowired Environment environment,
                                 @LocalServerPort int port) {
         final String localhost = "http://localhost";
         final String path = "/users";
         usersPath = fromUriString(localhost).port(port).path(path).build().toUri();
         usernamePathVariable = fromUri(usersPath).path("/{username}");
 
+        final boolean securityDisabled = Stream.of(environment.getActiveProfiles())
+                .anyMatch(s -> s.equalsIgnoreCase("no-security"));
         this.jdbcTemplate = jdbcTemplate;
+        Assume.assumeFalse("Security should be enabled for this test", securityDisabled);
     }
 
     @Test

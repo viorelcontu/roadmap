@@ -2,7 +2,8 @@ GET http://localhost:8080/actuator/health
 Accept: application/json
 ###
 
-GET http://localhost:8080/beans
-Accept: application/json
+
+POST http://localhost:8080/actuator/shutdown
+X-API-KEY: 970f88cb-2900-4530-a4a8-719ae882058c
 
 ###

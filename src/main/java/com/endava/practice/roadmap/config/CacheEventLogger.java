@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.config.cache;
+package com.endava.practice.roadmap.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.ehcache.event.CacheEvent;

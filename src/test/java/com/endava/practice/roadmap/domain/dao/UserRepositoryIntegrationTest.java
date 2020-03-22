@@ -1,13 +1,11 @@
 package com.endava.practice.roadmap.domain.dao;
 
-import com.endava.practice.roadmap.config.TransactionLoggingConfig;
 import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.util.TestUsers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Optional;
@@ -17,7 +15,6 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
-@Import(TransactionLoggingConfig.class)
 public class UserRepositoryIntegrationTest {
 
     @Autowired

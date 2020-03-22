@@ -1,9 +1,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.ehcache.org/v3"
-        xmlns:jsr107="http://www.ehcache.org/v3/jsr107"
-        xsi:schemaLocation="
-            http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd
-            http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
 
     <cache alias="coins">
         <key-type>java.lang.Object</key-type>
@@ -14,7 +11,7 @@
 
         <listeners>
             <listener>
-                <class>com.endava.practice.roadmap.config.cache.CacheEventLogger</class>
+                <class>com.endava.practice.roadmap.config.CacheEventLogger</class>
                 <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
                 <event-ordering-mode>UNORDERED</event-ordering-mode>
                 <events-to-fire-on>CREATED</events-to-fire-on>
@@ -37,7 +34,7 @@
 
         <listeners>
             <listener>
-                <class>com.endava.practice.roadmap.config.cache.CacheEventLogger</class>
+                <class>com.endava.practice.roadmap.config.CacheEventLogger</class>
                 <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
                 <event-ordering-mode>UNORDERED</event-ordering-mode>
                 <events-to-fire-on>CREATED</events-to-fire-on>

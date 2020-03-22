@@ -12,6 +12,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.endava.practice.roadmap.domain.model.enums.CoinMarketApi.LISTING;
 import static com.endava.practice.roadmap.domain.model.enums.CoinMarketApi.QUOTES;
@@ -24,6 +25,9 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequiredArgsConstructor
 public class CoinMarketClient {
 
+    private static final Supplier<HttpServerErrorException> INTERNAL_SERVER_ERROR_EXCEPTION_SUPPLIER =
+            () -> new HttpServerErrorException(INTERNAL_SERVER_ERROR);
+
     private final RestTemplate coinMarketRestClient;
 
     public ExternalCoin requestMarketQuotes(final int externalId) {
@@ -34,7 +38,7 @@ public class CoinMarketClient {
 
         return ofNullable(response.getBody())
                 .map(exQuotesResponse -> exQuotesResponse.getData().get(valueOf(externalId)))
-                .orElseThrow(() -> new HttpServerErrorException(INTERNAL_SERVER_ERROR));
+                .orElseThrow(INTERNAL_SERVER_ERROR_EXCEPTION_SUPPLIER);
     }
 
     public List<ExternalCoin> requestCoinListing(final int limit) {
@@ -46,7 +50,7 @@ public class CoinMarketClient {
 
         return ofNullable(response.getBody())
                 .map(ExternalListingResponse::getData)
-                .orElseThrow(() -> new HttpServerErrorException(INTERNAL_SERVER_ERROR));
+                .orElseThrow(INTERNAL_SERVER_ERROR_EXCEPTION_SUPPLIER);
     }
 
     private MultiValueMap<String, String> buildQueryParams(int limit) {

@@ -16,7 +16,7 @@ spring:
     driver-class-name: org.h2.Driver
     url: 'jdbc:h2:mem:testdb;Mode=Oracle;DB_CLOSE_DELAY=-1'
     username: sa
-    password: sa
+    password:
     data: 'classpath:db/test-data.sql'
     continue-on-error: true
 
