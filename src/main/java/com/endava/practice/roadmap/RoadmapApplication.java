@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
         "com.endava.practice.roadmap.domain.service",
         "com.endava.practice.roadmap.domain.security",
         "com.endava.practice.roadmap.domain.dao",
-        "com.endava.practice.roadmap.domain.mapper",
+    "com.endava.practice.roadmap.domain.converter",
         "com.endava.practice.roadmap.web"})
 @PropertySource(value = "file:${ROADMAP_CONFIG_PATH:.}/roadmap.properties", ignoreResourceNotFound = true)
 @PropertySource(value = "classpath:roadmap.properties", ignoreResourceNotFound = true)

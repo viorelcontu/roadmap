@@ -21,11 +21,11 @@ import static java.util.UUID.fromString;
 @Service
 @RequiredArgsConstructor
 @Profile("!no-security")
-public class SecurityServiceImpl implements SecurityService {
+public class PrimitiveSecurity implements SecurityProvider {
     //TODO implement Logging for different security scenarios
 
-    private ThreadLocal<User> currentUser = new ThreadLocal<>();
-    private ThreadLocal<Set<Permission>> currentUserPermissions = new ThreadLocal<>();
+    private final ThreadLocal<User> currentUser = new ThreadLocal<>();
+    private final ThreadLocal<Set<Permission>> currentUserPermissions = new ThreadLocal<>();
 
     private final UserRepository userRepository;
 

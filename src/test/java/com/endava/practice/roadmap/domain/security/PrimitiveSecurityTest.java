@@ -1,11 +1,10 @@
-package com.endava.practice.roadmap.domain.service;
+package com.endava.practice.roadmap.domain.security;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
 import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.domain.model.enums.Permission;
 import com.endava.practice.roadmap.domain.model.exceptions.AuthenticationException;
 import com.endava.practice.roadmap.domain.model.exceptions.ForbiddenException;
-import com.endava.practice.roadmap.domain.security.SecurityServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -24,22 +23,26 @@ import java.util.UUID;
 
 import static com.endava.practice.roadmap.domain.model.enums.Permission.CLIENT_ADMIN;
 import static com.endava.practice.roadmap.domain.model.enums.Permission.OPERATOR_ADMIN;
-import static com.endava.practice.roadmap.util.TestUsers.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static com.endava.practice.roadmap.util.TestUsers.ADMIN_EXISTING;
+import static com.endava.practice.roadmap.util.TestUsers.CLIENT_INACTIVE;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SecurityServiceImplTest {
+class PrimitiveSecurityTest {
 
     @Mock
     UserRepository userDaoMock;
 
     @InjectMocks
-    SecurityServiceImpl securityService;
+    PrimitiveSecurity primitiveSecurity;
 
     @AfterEach
     void tearDown() {
-        ReflectionTestUtils.setField(securityService, "currentUserPermissions", new ThreadLocal<Permission>());
+        ReflectionTestUtils.setField(primitiveSecurity, "currentUserPermissions", new ThreadLocal<Permission>());
         verifyNoMoreInteractions(userDaoMock);
     }
 
@@ -51,9 +54,9 @@ class SecurityServiceImplTest {
 
         when(userDaoMock.findByTokenEquals(token)).thenReturn(Optional.of(authenticatedUser));
 
-        securityService.authenticateUser(token.toString());
+        primitiveSecurity.authenticateUser(token.toString());
 
-        Assertions.assertThat(securityService.getCurrentUser())
+        Assertions.assertThat(primitiveSecurity.getCurrentUser())
                 .isEqualToComparingFieldByField(authenticatedUser);
 
         verify(userDaoMock).findByTokenEquals(token);
@@ -64,13 +67,13 @@ class SecurityServiceImplTest {
             "5zzzzzzf-4672-4824-807d-087730c7ec62",
             "5f0909af46724824807d087730c7ec62"})
     void invalidTokenThrowsAuthenticationFailed(String input) {
-        assertThatThrownBy(() -> securityService.authenticateUser(input)).
+        assertThatThrownBy(() -> primitiveSecurity.authenticateUser(input)).
                 isInstanceOf(AuthenticationException.class);
     }
 
     @Test
     void nullTokenThrowsAuthenticationFailed() {
-        assertThatThrownBy(() -> securityService.authenticateUser(null)).
+        assertThatThrownBy(() -> primitiveSecurity.authenticateUser(null)).
                 isInstanceOf(AuthenticationException.class);
     }
 
@@ -80,10 +83,10 @@ class SecurityServiceImplTest {
         final UUID token = inactiveUser.getToken();
         when(userDaoMock.findByTokenEquals(token)).thenReturn(Optional.of(inactiveUser));
 
-        assertThatThrownBy(() -> securityService.authenticateUser(token.toString()))
+        assertThatThrownBy(() -> primitiveSecurity.authenticateUser(token.toString()))
                 .isInstanceOf(AuthenticationException.class);
 
-        assertThatThrownBy (() -> securityService.getCurrentUser())
+        assertThatThrownBy (() -> primitiveSecurity.getCurrentUser())
                 .isInstanceOf(AuthenticationException.class);
 
         verify(userDaoMock).findByTokenEquals(token);
@@ -91,23 +94,23 @@ class SecurityServiceImplTest {
 
     @Test
     void authorizeActionAccessGranted() {
-        final Object object = ReflectionTestUtils.getField(securityService, "currentUserPermissions");
+        final Object object = ReflectionTestUtils.getField(primitiveSecurity, "currentUserPermissions");
         final ThreadLocal<Set<Permission>> currentUserPermissions = (ThreadLocal<Set<Permission>>) object;
 
         currentUserPermissions.set(EnumSet.of(CLIENT_ADMIN));
 
-        assertThatCode( () -> securityService.authorizeAction(CLIENT_ADMIN))
+        assertThatCode( () -> primitiveSecurity.authorizeAction(CLIENT_ADMIN))
                 .doesNotThrowAnyException();
     }
 
     @Test
     void authorizeActionAccessDenied() {
-        final Object object = ReflectionTestUtils.getField(securityService, "currentUserPermissions");
+        final Object object = ReflectionTestUtils.getField(primitiveSecurity, "currentUserPermissions");
         final ThreadLocal<Set<Permission>> currentUserPermissions = (ThreadLocal<Set<Permission>>) object;
 
         currentUserPermissions.set(EnumSet.of(CLIENT_ADMIN));
 
-        assertThatThrownBy( () -> securityService.authorizeAction(OPERATOR_ADMIN))
+        assertThatThrownBy( () -> primitiveSecurity.authorizeAction(OPERATOR_ADMIN))
                 .isInstanceOf(ForbiddenException.class);
     }
 }

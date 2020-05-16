@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.mapper;
+package com.endava.practice.roadmap.domain.converter;
 
 import com.endava.practice.roadmap.domain.dao.GroupRepository;
 import com.endava.practice.roadmap.domain.model.entities.Group;
@@ -14,27 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 
 @Mapper
-public abstract class EntityMapper {
+public abstract class UserConverter {
 
     @Autowired
     protected GroupRepository groupRepository;
 
     @Mapping(target = "role", source = "group")
-    public abstract UserDto mapData(User entity);
+    public abstract UserDto toDto(User entity);
 
     @Mapping(target= "group", source ="role")
-    public abstract User mapData(UserDto dto);
+    public abstract User toEntity(UserDto dto);
 
     @Mapping(target= "group", source ="role")
     public abstract void updateUser (UserDto dto, @MappingTarget User entity);
 
-    public Group mapData(Role role) {
+    public Group toGroup(Role role) {
         Integer groupId = role.getGroupId();
         Optional<Group> optional = groupRepository.findById(groupId);
         return  optional.orElseThrow(() -> new BadRequestException ("Role does not exist"));
     }
 
-    public Role mapData(Group group) {
+    public Role toRole(Group group) {
         return group.getRole();
     }
 }

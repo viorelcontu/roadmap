@@ -1,9 +1,12 @@
-package com.endava.practice.roadmap.domain.service.coinmarket;
+package com.endava.practice.roadmap.domain.service;
 
-import com.endava.practice.roadmap.domain.mapper.CoinMapper;
+import com.endava.practice.roadmap.domain.converter.CoinConverter;
+import com.endava.practice.roadmap.domain.model.enums.Currency;
 import com.endava.practice.roadmap.domain.model.exceptions.BadRequestException;
 import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.endava.practice.roadmap.domain.model.internal.Coin;
+import com.endava.practice.roadmap.domain.service.client.CoinMarketClient;
+import com.endava.practice.roadmap.web.MappingController;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +15,23 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
+import static com.endava.practice.roadmap.domain.model.enums.Currency.currencyStringMap;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Service
 @RequiredArgsConstructor
-public class CoinLookupService {
+public class CoinMappingService implements MappingController {
 
     private final CoinMarketClient coinMarketClient;
 
-    private final CoinMapper coinMapper;
+    private final CoinConverter coinConverter;
 
     @Setter(onMethod_ = {@Autowired})
-    private CoinLookupService selfProxy;
+    private CoinMappingService selfProxy;
 
     @Value("${crypto.listing.limit}")
     private int listingLimit;
@@ -40,14 +45,20 @@ public class CoinLookupService {
         return findCoin(coin -> coin.getCodeName().equals(codeName));
     }
 
+    @Override
     @Cacheable("coins")
     public List<Coin> getCoinListing() {
         final List<ExternalCoin> externalCoinData = coinMarketClient.requestCoinListing(listingLimit);
 
         return externalCoinData.stream()
-                .map(coinMapper::mapCoinListing)
+                .map(coinConverter::mapCoinListing)
                 .sorted(comparing(Coin::getWorldRank))
                 .collect(toUnmodifiableList());
+    }
+
+    @Override
+    public Map<Currency, String> getCurrencies() {
+        return currencyStringMap;
     }
 
     private Coin findCoin(Predicate<Coin> predicate) {

@@ -2,8 +2,6 @@ package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.config.TestConfig;
 import com.endava.practice.roadmap.web.interceptors.AuthenticationInterceptor;
-import com.endava.practice.roadmap.domain.service.UserService;
-import com.endava.practice.roadmap.domain.service.coinmarket.MarketService;
 import com.endava.practice.roadmap.web.interceptors.LoggingInterceptor;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +30,13 @@ abstract public class BaseControllerTest {
         );
 
     @MockBean
-    UserService userServiceMock;
+    UserController userControllerMock;
 
     @MockBean
-    MarketService marketService;
+    LookupController lookupController;
+
+    @MockBean
+    MappingController mappingController;
 
     @MockBean
     AuthenticationInterceptor authenticationInterceptor;
@@ -45,6 +46,6 @@ abstract public class BaseControllerTest {
 
     @AfterEach
     void verifyMockedResources () {
-        verifyNoMoreInteractions(userServiceMock);
+        verifyNoMoreInteractions(userControllerMock);
     }
 }

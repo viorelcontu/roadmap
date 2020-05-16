@@ -1,12 +1,10 @@
-package com.endava.practice.roadmap.config.security;
+package com.endava.practice.roadmap.domain.security;
 
 import com.endava.practice.roadmap.domain.dao.UserRepository;
-import com.endava.practice.roadmap.domain.security.AuthorizationAspect;
 import com.endava.practice.roadmap.domain.model.annotations.RequirePermission;
 import com.endava.practice.roadmap.domain.model.entities.User;
 import com.endava.practice.roadmap.domain.model.enums.Permission;
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
-import com.endava.practice.roadmap.domain.security.SecurityService;
 import com.endava.practice.roadmap.util.TestUsers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +22,12 @@ import java.util.stream.Stream;
 
 import static com.endava.practice.roadmap.domain.model.enums.Permission.CLIENT_ADMIN;
 import static com.endava.practice.roadmap.domain.model.enums.Permission.OPERATOR_ADMIN;
-import static com.endava.practice.roadmap.util.TestUsers.*;
+import static com.endava.practice.roadmap.util.TestUsers.ADMIN_EXISTING;
+import static com.endava.practice.roadmap.util.TestUsers.AUDIT_EXISTING;
+import static com.endava.practice.roadmap.util.TestUsers.CLIENT_2_NEW;
+import static com.endava.practice.roadmap.util.TestUsers.CLIENT_EXISTING;
+import static com.endava.practice.roadmap.util.TestUsers.CLIENT_NEW;
+import static com.endava.practice.roadmap.util.TestUsers.MANAGER_EXISTING;
 import static com.endava.practice.roadmap.util.TestUtils.requiredPermissionFactory;
 import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,38 +36,45 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AuthorizationAspectTest {
+class AuthorizationManagerTest {
 
     @Mock
-    private SecurityService securityService;
+    private SecurityProvider securityService;
 
     @Mock
     private UserRepository userRepository;
 
     @InjectMocks
-    private AuthorizationAspect authorizationAspect;
+    private AuthorizationManager authorizationManager;
 
     @Captor
     private ArgumentCaptor<Permission> captor;
 
     @Test
-    void validatePermissions() {
+    void validatePermissionsOnMethods() {
         final RequirePermission requirePermission = requiredPermissionFactory(CLIENT_ADMIN);
-        authorizationAspect.validatePermissions(requirePermission);
+        authorizationManager.validatePermissionsOnMethods(requirePermission);
+        validateSecurityServiceCall(CLIENT_ADMIN);
+    }
+
+    @Test
+    void validatePermissionsOnTypes() {
+        final RequirePermission requirePermission = requiredPermissionFactory(CLIENT_ADMIN);
+        authorizationManager.validatePermissionsOnTypes(requirePermission);
         validateSecurityServiceCall(CLIENT_ADMIN);
     }
 
     @Test
     void validateNewUserClient() {
         final UserDto userDto = CLIENT_NEW.buildUserDto();
-        authorizationAspect.validateNewUser(userDto);
+        authorizationManager.validateNewUser(userDto);
         validateSecurityServiceCall(CLIENT_ADMIN);
     }
 
     @Test
     void validateNewUserOperator() {
         final UserDto userDto = MANAGER_EXISTING.buildUserDto();
-        authorizationAspect.validateNewUser(userDto);
+        authorizationManager.validateNewUser(userDto);
         validateSecurityServiceCall(OPERATOR_ADMIN);
     }
 
@@ -76,7 +86,7 @@ class AuthorizationAspectTest {
                 .thenReturn(Optional.of(originalUser));
 
         final UserDto updatedUserDto = CLIENT_2_NEW.buildUserDto();
-        authorizationAspect.validateUserUpdate(updatedUserDto, username);
+        authorizationManager.validateUserUpdate(updatedUserDto, username);
 
         validateSecurityServiceCall(CLIENT_ADMIN);
     }
@@ -90,7 +100,7 @@ class AuthorizationAspectTest {
                 .thenReturn(Optional.of(user));
 
         final UserDto updatedUserDto = updatedTestUser.buildUserDto();
-        authorizationAspect.validateUserUpdate(updatedUserDto, username);
+        authorizationManager.validateUserUpdate(updatedUserDto, username);
 
         validateSecurityServiceCall(OPERATOR_ADMIN);
     }
@@ -104,7 +114,7 @@ class AuthorizationAspectTest {
                 .thenReturn(empty());
 
         final UserDto updatedUserDto = CLIENT_2_NEW.buildUserDto();
-        authorizationAspect.validateUserUpdate(updatedUserDto, username);
+        authorizationManager.validateUserUpdate(updatedUserDto, username);
 
         validateSecurityServiceCall(CLIENT_ADMIN);
     }

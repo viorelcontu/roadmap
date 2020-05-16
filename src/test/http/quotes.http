@@ -1,4 +1,4 @@
-GET /quotes/BTC
+GET /map/quotes/BTC
 Host: localhost:8080
 Accept: application/json
 X-API-KEY: c4d81355-19dd-4c45-a755-0d19f3ea402c

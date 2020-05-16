@@ -258,7 +258,7 @@
                         <configuration>
                             <excludes>
                                 <exclude>
-                                    com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*
+                                    com.endava.practice.roadmap.domain.service.client.*IntegrationTest*
                                 </exclude>
                             </excludes>
                         </configuration>
@@ -269,7 +269,7 @@
                             <skipITs>true</skipITs>
                             <includes>
                                 <include>
-                                    com.endava.practice.roadmap.domain.service.coinmarket.*IntegrationTest*
+                                    com.endava.practice.roadmap.domain.service.client.*IntegrationTest*
                                 </include>
                             </includes>
                         </configuration>

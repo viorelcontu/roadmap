@@ -1,47 +1,42 @@
 package com.endava.practice.roadmap.web;
 
 import com.endava.practice.roadmap.domain.model.internal.UserDto;
-import com.endava.practice.roadmap.domain.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
+import javax.validation.Valid;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
-public class UserController {
-
-    private final UserService userService;
-
-    @GetMapping("/{username}")
-    public UserDto findOne(@PathVariable("username") final String userName) {
-        return userService.findOne(userName);
-    }
+public interface UserController {
 
     @GetMapping
-    public List<UserDto> findAll() {
-        return userService.findAll();
-    }
+    List<UserDto> findAll();
+
+    @GetMapping("/{username}")
+    UserDto find(@PathVariable("username") String username);
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public UserDto create(@RequestBody @Valid final UserDto resource) {
-        return userService.create(resource);
-    }
+    UserDto create(@RequestBody @Valid UserDto resource);
 
     @PutMapping("/{username}")
     @ResponseStatus(ACCEPTED)
-    public UserDto replace(@PathVariable("username") final String userName, @RequestBody @Valid final UserDto user) {
-        return userService.replace(user, userName);
-    }
+    UserDto amend(@PathVariable("username") String username, @RequestBody @Valid UserDto user);
 
     @DeleteMapping("/{username}")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable("username") final String userName) {
-        userService.delete(userName);
-    }
+    void delete(@PathVariable("username") String userName);
 }

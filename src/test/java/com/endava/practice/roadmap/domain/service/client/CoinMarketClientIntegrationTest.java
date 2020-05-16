@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.service.coinmarket;
+package com.endava.practice.roadmap.domain.service.client;
 
 import com.endava.practice.roadmap.config.RestTemplateConfig;
 import com.endava.practice.roadmap.config.TestConfig;

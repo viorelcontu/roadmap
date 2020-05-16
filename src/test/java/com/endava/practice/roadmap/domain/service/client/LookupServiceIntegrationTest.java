@@ -1,10 +1,11 @@
-package com.endava.practice.roadmap.domain.service.coinmarket;
+package com.endava.practice.roadmap.domain.service.client;
 
 import com.endava.practice.roadmap.config.RestTemplateConfig;
 import com.endava.practice.roadmap.config.TestConfig;
-import com.endava.practice.roadmap.domain.mapper.CoinMapperImpl;
-import com.endava.practice.roadmap.domain.model.enums.Currency;
+import com.endava.practice.roadmap.domain.converter.CoinConverterImpl;
 import com.endava.practice.roadmap.domain.model.internal.Coin;
+import com.endava.practice.roadmap.domain.service.CoinMappingService;
+import com.endava.practice.roadmap.domain.service.LookupService;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -12,43 +13,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import java.util.List;
-import java.util.Map;
-
 @SpringJUnitConfig({TestConfig.class,
         RestTemplateConfig.class,
         CoinMarketClient.class,
-        CoinMapperImpl.class,
-        CoinLookupService.class,
-        CoinMarketService.class})
+        CoinConverterImpl.class,
+        CoinMappingService.class,
+        LookupService.class})
 @Slf4j
-class CoinMarketServiceIntegrationTest {
+class LookupServiceIntegrationTest {
 
     @Autowired
-    private CoinMarketService coinMarketService;
+    private LookupService coinLookupService;
 
     @Autowired
     private ObjectWriter objectWriter;
 
     @Test
     void getQuotes() {
-        final Coin btc = coinMarketService.getQuotes("BTC");
+        final Coin btc = coinLookupService.getQuote("BTC");
         log.info("[QUOTE Response] {}", btc);
         printSerializedObject(btc);
-    }
-
-    @Test
-    void getListing() {
-        final List<Coin> listing = coinMarketService.getListing();
-        log.info("[LISTING Response] {}", listing);
-        printSerializedObject(listing);
-    }
-
-    @Test
-    void getCurrencies() {
-        final Map<Currency, String> currencies = coinMarketService.getCurrencies();
-        log.info("[CURRENCIES Response] {}", currencies);
-        printSerializedObject(currencies);
     }
 
     @SneakyThrows

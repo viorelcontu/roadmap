@@ -1,4 +1,4 @@
-package com.endava.practice.roadmap.domain.service.coinmarket;
+package com.endava.practice.roadmap.domain.service.client;
 
 import com.endava.practice.roadmap.domain.model.external.common.ExternalCoin;
 import com.endava.practice.roadmap.domain.model.external.listings.ExternalListingResponse;
@@ -25,7 +25,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequiredArgsConstructor
 public class CoinMarketClient {
 
-    private static final Supplier<HttpServerErrorException> INTERNAL_SERVER_ERROR_EXCEPTION_SUPPLIER =
+    private static final Supplier<HttpServerErrorException> INTERNAL_SERVER_ERROR_EXCEPTION =
             () -> new HttpServerErrorException(INTERNAL_SERVER_ERROR);
 
     private final RestTemplate coinMarketRestClient;
@@ -38,7 +38,7 @@ public class CoinMarketClient {
 
         return ofNullable(response.getBody())
                 .map(exQuotesResponse -> exQuotesResponse.getData().get(valueOf(externalId)))
-                .orElseThrow(INTERNAL_SERVER_ERROR_EXCEPTION_SUPPLIER);
+                .orElseThrow(INTERNAL_SERVER_ERROR_EXCEPTION);
     }
 
     public List<ExternalCoin> requestCoinListing(final int limit) {
@@ -50,7 +50,7 @@ public class CoinMarketClient {
 
         return ofNullable(response.getBody())
                 .map(ExternalListingResponse::getData)
-                .orElseThrow(INTERNAL_SERVER_ERROR_EXCEPTION_SUPPLIER);
+                .orElseThrow(INTERNAL_SERVER_ERROR_EXCEPTION);
     }
 
     private MultiValueMap<String, String> buildQueryParams(int limit) {
