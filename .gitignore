@@ -1,8 +1,9 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
-/config/roadmap.properties
-/src/test/resources/roadmap.properties
+/volumes
+./docker-compose.yml
+./Dockerfile
 
 ### STS ###
 .apt_generated

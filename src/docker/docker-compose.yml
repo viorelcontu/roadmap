@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  roadmap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: @project.version@
+        LOCATION: target
+    image: @docker.image.prefix@/@docker.image.name@
+    container_name: roadmap
+    hostname: roadmap
+    ports:
+      - "8080:8080"
+    environment:
+      ROADMAP_CONFIG_PATH: /config
+    volumes:
+      - '@project.basedir@\\volumes\\config\\roadmap.properties:/config/roadmap.properties'
+    restart: on-failure
+    networks:
+      - roadnetwork
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+  oracle:
+    image: 'aleanca/oracledb-12.2.0.1-ee:12.2.0.1-ee-01'
+    container_name: @oracle.host@
+    hostname: @oracle.host@
+    environment:
+      ORACLE_SID: @oracle.cdb@
+      ORACLE_PDB: @oracle.pdb@
+      ORACLE_PWD: @oracle.sys.password@
+    volumes:
+      - '@project.basedir@\\volumes\\oracle:/opt/oracle/scripts/setup'
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    networks:
+      - roadnetwork
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+
+networks:
+  roadnetwork:
+    driver: bridge
+#    external: true

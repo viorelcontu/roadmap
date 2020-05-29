@@ -1,32 +1,32 @@
 spring:
-  jackson:
-    serialization.indent-output: true
-    deserialization.fail-on-unknown-properties: true
-  cache:
-    jcache.config: 'classpath:ehcache.xml'
-  jpa:
-    properties:
-      hibernate:
-        format_sql: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-  datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
+    jackson:
+        serialization.indent-output: true
+        deserialization.fail-on-unknown-properties: true
+    cache:
+        jcache.config: 'classpath:ehcache.xml'
+    jpa:
+        properties:
+            hibernate:
+                format_sql: true
+        database-platform: org.hibernate.dialect.Oracle12cDialect
+        hibernate:
+            ddl-auto: validate
+        show-sql: true
+    datasource:
+        driver-class-name: oracle.jdbc.OracleDriver
 
 logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type.descriptor.sql.BasicBinder: TRACE
-      springframework.transaction.interceptor: TRACE
+    level:
+        org:
+            hibernate:
+                SQL: DEBUG
+                type.descriptor.sql.BasicBinder: TRACE
+            springframework.transaction.interceptor: TRACE
 
 
 management:
-  endpoints.web.exposure.include: '*'
-  endpoint.shutdown.enabled: true
+    endpoints.web.exposure.include: '*'
+    endpoint.shutdown.enabled: true
 
 springfox.documentation.swagger.v2.path: '/api/roadmap-auto-api'
 

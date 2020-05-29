@@ -1,11 +1,11 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
 
-ARG VERSION
-ARG LOCATION
+ARG VERSION=@project.version@
+ARG LOCATION=target
 
 COPY ["${LOCATION}/roadmap-${VERSION}.jar", "/opt/roadmap.jar"]
 
-COPY ["docker/entrypoint.sh", "/"]
+COPY ["${LOCATION}/images/roadmap/entrypoint.sh", "/"]
 
 RUN set -x && \
     addgroup -S -g 2020 roadmap && \
